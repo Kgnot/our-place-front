@@ -1,0 +1,55 @@
+<div class="login-wrapper">
+  <!-- Lado Izquierdo: Visual / Branding -->
+  <aside class="login-aside">
+    <div class="aside-content">
+      <h1 class="brand-name">Our Place</h1>
+      <p class="brand-tagline">Tu espacio íntimo para recuerdos, momentos y aventuras compartidas.</p>
+      <!-- Iconos decorativos o ilustraciones sutiles irían aquí -->
+    </div>
+  </aside>
+
+  <!-- Lado Derecho: Formulario -->
+  <main class="login-main">
+    <div class="form-container">
+      <h2>{{ isLoginMode() ? 'Bienvenido de nuevo' : 'Crea tu cuenta' }}</h2>
+      <p class="subtitle">{{ isLoginMode() ? 'Inicia sesión para continuar' : 'Empieza a guardar tus recuerdos' }}</p>
+
+      <form (ngSubmit)="onSubmit()" class="login-form">
+        <div class="form-group">
+          <label for="email">Correo electrónico</label>
+          <input
+            type="email"
+            id="email"
+            class="form-control"
+            [ngModel]="email()"
+            (ngModelChange)="email.set($event)"
+            name="email"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            [ngModel]="password()"
+            (ngModelChange)="password.set($event)"
+            name="password"
+            required>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-full" [disabled]="auth.isLoading()">
+          {{ auth.isLoading() ? 'Cargando...' : (isLoginMode() ? 'Iniciar Sesión' : 'Registrarse') }}
+        </button>
+      </form>
+
+      <div class="toggle-mode">
+        <span>{{ isLoginMode() ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?' }}</span>
+        <button class="btn-text" (click)="toggleMode()">
+          {{ isLoginMode() ? 'Regístrate' : 'Inicia sesión' }}
+        </button>
+      </div>
+    </div>
+  </main>
+</div>

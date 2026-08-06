@@ -1,0 +1,21 @@
+@if (ui.isSearchOpen()) {
+  <div class="search-overlay" (click)="close()">
+    <div class="search-panel" (click)="$event.stopPropagation()">
+      <div class="search-input-wrapper">
+        <span class="material-symbols-outlined">search</span>
+        <input
+          type="text"
+          placeholder="Buscar espacios..."
+          [ngModel]="searchTerm()"
+          (ngModelChange)="searchTerm.set($event)"
+          autofocus />
+        <button class="esc-btn" (click)="close()">ESC</button>
+      </div>
+
+      <!-- Resultados irían aquí -->
+      <div class="search-results">
+        <p class="hint">Busca entre tus rooms y recuerdos.</p>
+      </div>
+    </div>
+  </div>
+}

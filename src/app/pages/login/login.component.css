@@ -1,0 +1,98 @@
+.login-wrapper {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Lado Visual */
+.login-aside {
+  flex: 1;
+  background-color: var(--color-secondary); /* Verde salvia */
+  color: var(--color-neutral);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.aside-content {
+  max-width: 400px;
+  text-align: center;
+}
+
+.brand-name {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  letter-spacing: -1px;
+}
+
+.brand-tagline {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  line-height: 1.5;
+}
+
+/* Lado Formulario */
+.login-main {
+  flex: 1.2;
+  background-color: var(--color-neutral);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 380px;
+}
+
+.form-container h2 {
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: var(--color-text-light);
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.w-full {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.toggle-mode {
+  margin-top: 2rem;
+  text-align: center;
+  color: var(--color-text-light);
+}
+
+.btn-text {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .login-aside {
+    display: none;
+  }
+}

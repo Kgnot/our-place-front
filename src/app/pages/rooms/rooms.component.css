@@ -1,0 +1,196 @@
+.op-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  position: relative;
+  z-index: 40;
+}
+
+.brand-logo {
+  font-family: 'Literata', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: -0.02em;
+}
+
+.header-actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-white);
+  box-shadow: 0 2px 8px rgba(61,58,53,0.08);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+.icon-btn:hover { transform: scale(0.95); }
+
+.avatar-placeholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-secondary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(61,58,53,0.08);
+}
+
+.op-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+}
+
+.page-intro {
+  margin: 48px 0;
+  max-width: 600px;
+}
+.page-intro h2 {
+  font-family: 'Literata', serif;
+  font-size: 36px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--color-text);
+}
+.page-intro p {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px;
+  color: var(--color-text-light);
+}
+
+.rooms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 32px;
+}
+
+/* Tarjeta de Room */
+.room-card {
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+.room-card:hover {
+  transform: translateY(-4px);
+}
+/* Mover la cinta hacia abajo en hover */
+.room-card:hover .washi-tape {
+  top: 6px;
+}
+
+.washi-tape {
+  top: -6px;
+  left: 24px;
+  transition: top 0.3s ease;
+}
+
+.card-inner {
+  background: var(--color-white);
+  border-radius: 16px;
+  padding: 12px;
+  padding-bottom: 24px;
+  box-shadow: 0 8px 30px rgba(61,58,53,0.06);
+  border: 1px solid rgba(0,0,0,0.05);
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card-cover {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.cover-initials {
+  font-family: 'Literata', serif;
+  font-size: 48px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 600;
+}
+
+.card-content {
+  width: 100%;
+  padding: 0 8px;
+}
+.card-content h3 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+.room-tag {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-light);
+  margin-top: 4px;
+}
+
+/* Tarjeta de Crear */
+.create-card {
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.create-inner {
+  height: 100%;
+  min-height: 280px;
+  border: 2px dashed #ccc;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+}
+.create-card:hover .create-inner {
+  background: var(--color-neutral);
+}
+.create-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  transition: transform 0.3s;
+}
+.create-card:hover .create-icon {
+  transform: scale(1.1);
+}
+.create-inner h3 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.create-inner p {
+  color: var(--color-text-light);
+  font-size: 14px;
+}

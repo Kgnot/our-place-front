@@ -1,0 +1,156 @@
+.feed-main {
+  padding: 100px 24px 120px;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: var(--color-text-light);
+  cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  margin-bottom: 32px;
+  transition: color 0.2s;
+}
+.back-btn:hover { color: var(--color-primary); }
+
+/* Masonry Layout usando CSS Columns */
+.masonry-grid {
+  column-count: 3;
+  column-gap: 24px;
+}
+
+@media (max-width: 1024px) {
+  .masonry-grid { column-count: 2; }
+}
+@media (max-width: 768px) {
+  .masonry-grid { column-count: 1; }
+}
+
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 24px;
+  display: inline-block;
+  width: 100%;
+  position: relative;
+}
+
+/* Tarjeta Polaroid */
+.polaroid-card {
+  background: var(--color-white);
+  padding: 8px 8px 16px;
+  border-radius: 4px;
+  box-shadow: 0 8px 30px rgba(61, 58, 53, 0.06);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+}
+
+/* Rotaciones sutiles */
+.rotate-left { transform: rotate(-1deg); }
+.rotate-right { transform: rotate(1deg); }
+.group:hover .polaroid-card { transform: rotate(0deg) translateY(-4px); }
+
+.photo-placeholder {
+  width: 100%;
+  aspect-ratio: 4/5;
+  border-radius: 2px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.photo-icon {
+  font-size: 48px;
+  color: rgba(0,0,0,0.1);
+}
+
+.handwritten-comment {
+  font-family: 'Literata', serif;
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1.4;
+  color: var(--color-text);
+  text-align: center;
+  margin-bottom: 16px;
+  padding: 0 8px;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  margin-top: auto;
+}
+
+.like-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-light);
+  transition: color 0.2s;
+}
+.like-btn:hover { color: var(--color-primary); }
+.like-btn .material-symbols-outlined { font-size: 20px; }
+.like-count { font-size: 12px; font-weight: 600; }
+
+.comment-input {
+  width: 180px;
+  background: var(--color-neutral);
+  border: none;
+  border-radius: 50px;
+  padding: 6px 12px;
+  font-size: 12px;
+  outline: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.comment-input:focus { box-shadow: 0 0 0 1px var(--color-primary); }
+
+/* Tarjeta de Añadir */
+.add-card-inner {
+  border: 2px dashed var(--color-border);
+  border-radius: 8px;
+  padding: 24px;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.add-card-inner:hover { background: var(--color-neutral); }
+.add-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  transition: transform 0.3s;
+}
+.add-card-inner:hover .add-icon { transform: scale(1.1); }
+.add-card-inner h3 { font-size: 18px; margin-bottom: 8px; }
+.add-card-inner p { font-size: 14px; color: var(--color-text-light); }
+
+/* Reutilizamos estilos de modal */
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.modal-card { background: white; border-radius: 16px; width: 100%; max-width: 450px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid var(--color-border); }
+.modal-header h3 { font-family: 'Literata', serif; font-size: 22px; }
+.modal-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.modal-footer { padding: 16px 24px; display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid var(--color-border); }
+.icon-btn-sm { border: none; background: transparent; cursor: pointer; padding: 4px; border-radius: 50%; color: var(--color-text-light); }

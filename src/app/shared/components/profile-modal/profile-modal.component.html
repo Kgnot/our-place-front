@@ -1,0 +1,52 @@
+@if (ui.isProfileModalOpen()) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Editar Perfil</h3>
+        <button class="icon-btn-sm" (click)="closeModal()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Avatar Preview -->
+        <div class="avatar-preview">
+          <img [src]="avatarUrl() || 'https://via.placeholder.com/80'" alt="Avatar" />
+        </div>
+
+        <div class="form-group">
+          <label>URL del Avatar</label>
+          <input type="text" class="form-control" [ngModel]="avatarUrl()" (ngModelChange)="avatarUrl.set($event)" placeholder="https://..." />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" class="form-control" [ngModel]="firstName()" (ngModelChange)="firstName.set($event)" />
+          </div>
+          <div class="form-group">
+            <label>Apellido</label>
+            <input type="text" class="form-control" [ngModel]="lastName()" (ngModelChange)="lastName.set($event)" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <input type="email" class="form-control" [ngModel]="email()" disabled />
+        </div>
+
+        <div class="form-group">
+          <label>Fecha de nacimiento</label>
+          <input type="date" class="form-control" [ngModel]="birthDate()" (ngModelChange)="birthDate.set($event)" />
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outlined" (click)="closeModal()">Cancelar</button>
+        <button class="btn btn-primary" (click)="saveProfile()" [disabled]="isSaving()">
+          {{ isSaving() ? 'Guardando...' : 'Guardar Cambios' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

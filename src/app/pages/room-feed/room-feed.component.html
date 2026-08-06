@@ -1,0 +1,89 @@
+<div class="noise-overlay"></div>
+
+<main class="feed-main">
+  <button class="back-btn" (click)="goBack()">
+    <span class="material-symbols-outlined">arrow_back</span>
+    Volver a Rooms
+  </button>
+
+  <div class="masonry-grid">
+    <!-- Tarjeta de Añadir Nueva Foto / Nota -->
+    <div class="masonry-item add-card-masonry">
+      <div class="add-card-inner" (click)="openAddModal()">
+        <div class="add-icon">
+          <span class="material-symbols-outlined">add_a_photo</span>
+        </div>
+        <h3>Subir nuevo momento</h3>
+        <p>Deja una nota o recuerdo especial.</p>
+      </div>
+    </div>
+
+    <!-- Estado de Carga -->
+    @if (isLoading()) {
+      <div class="masonry-item">
+        <div class="polaroid-card">
+          <p>Cargando recuerdos...</p>
+        </div>
+      </div>
+    }
+    @else if (notes().length === 0) {
+      <div class="masonry-item">
+        <div class="polaroid-card">
+          <p class="font-body-italic">Aún no hay recuerdos en este espacio.</p>
+        </div>
+      </div>
+    }
+    @else {
+      @for (note of notes(); track note.id) {
+        <article class="masonry-item group">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-6 washi-tape pink z-10"></div>
+
+          <div class="polaroid-card rotate-left">
+            <!-- Placeholder de color si no hay imagen -->
+            <div class="photo-placeholder" [style.background]="['#e5e2dc', '#f5f1e7', '#f0eee8'][$index % 3]">
+              <span class="material-symbols-outlined photo-icon">image</span>
+            </div>
+
+            <p class="handwritten-comment">
+              "{{ note.content }}"
+            </p>
+
+            <div class="card-footer">
+              <button class="like-btn">
+                <span class="material-symbols-outlined">favorite</span>
+                <span class="like-count">0</span>
+              </button>
+              <input type="text" class="comment-input" placeholder="Add comment..." />
+            </div>
+          </div>
+        </article>
+      }
+    }
+  </div>
+</main>
+
+<!-- Modal para añadir nota (mismo estilo que el de perfil) -->
+@if (isAddModalOpen()) {
+  <div class="modal-backdrop" (click)="closeAddModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Nuevo Momento</h3>
+        <button class="icon-btn-sm" (click)="closeAddModal()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>¿Qué quieres recordar?</label>
+          <textarea class="form-control" rows="4" [ngModel]="newNoteContent()" (ngModelChange)="newNoteContent.set($event)" placeholder="Escribe una nota de amor o un recuerdo..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outlined" (click)="closeAddModal()">Cancelar</button>
+        <button class="btn btn-primary" (click)="saveNote()" [disabled]="isSaving()">
+          {{ isSaving() ? 'Guardando...' : 'Publicar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
