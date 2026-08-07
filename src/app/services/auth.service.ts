@@ -56,6 +56,39 @@ export class AuthService {
       });
   }
 
+  /**
+   * Llama a POST /api/v1/auth/register (RegisterUserController).
+   * El endpoint devuelve RegisterUserOutput (sin tokens), así que no
+   * autenticamos automáticamente: se invoca `onSuccess` para que el
+   * componente pueda, por ejemplo, cambiar a modo login.
+   */
+  register(
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string,
+    onSuccess?: () => void,
+  ) {
+    this.isLoading.set(true);
+    this.http
+      .post<{ userId: string }>(`${this.apiUrl}/register`, {
+        email,
+        password,
+        firstName,
+        lastName,
+      })
+      .subscribe({
+        next: () => {
+          this.isLoading.set(false);
+          onSuccess?.();
+        },
+        error: (err) => {
+          console.error('error en registro', err);
+          this.isLoading.set(false);
+        },
+      });
+  }
+
   logout() {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('op_token');

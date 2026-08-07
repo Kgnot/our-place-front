@@ -1,0 +1,10 @@
+<div class="photo-card" [style.transform]="'rotate(' + rotate() + 'deg)'">
+  <div
+    class="washi-tape"
+    [class.sage]="tape() === 'sage'"
+    [class.mustard]="tape() === 'mustard'"
+  ></div>
+  <div class="card-inner">
+    <img [src]="imageUrl()" [alt]="alt()" class="photo-img" />
+  </div>
+</div>
