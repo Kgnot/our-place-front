@@ -1,0 +1,30 @@
+<app-dropdown #dd>
+  <!-- Botón disparador -->
+  <div trigger>
+    <button class="avatar-placeholder">
+      @if (userService.currentUser()?.avatarUrl) {
+        <img [src]="userService.currentUser()!.avatarUrl!" alt="Avatar" class="avatar-img" />
+      } @else {
+        <span class="material-symbols-outlined">person</span>
+      }
+    </button>
+  </div>
+
+  <!-- Contenido del menú -->
+  <div content>
+    <div class="dropdown-header">
+      <p class="dropdown-name">{{ userService.currentUser()?.firstName }} {{ userService.currentUser()?.lastName }}</p>
+      <p class="dropdown-email">{{ userService.currentUser()?.email }}</p>
+    </div>
+    <div class="dropdown-divider"></div>
+    <!-- Al hacer clic, abrimos el modal y cerramos el dropdown con dd.close() -->
+    <button class="dropdown-item" (click)="openProfile(); dd.close()">
+      <span class="material-symbols-outlined">account_circle</span>
+      Tu Perfil
+    </button>
+    <button class="dropdown-item danger" (click)="logout(); dd.close()">
+      <span class="material-symbols-outlined">logout</span>
+      Cerrar Sesión
+    </button>
+  </div>
+</app-dropdown>

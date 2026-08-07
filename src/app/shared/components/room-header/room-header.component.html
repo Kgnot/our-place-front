@@ -1,0 +1,18 @@
+<header class="room-nav-header">
+  <a routerLink="/rooms" class="brand-logo">ourplace</a>
+  <nav class="nav-links">
+    <a [routerLink]="['/rooms', roomId]" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Feed</a>
+    <a [routerLink]="['/rooms', roomId, 'dates']" routerLinkActive="active">Fechas Importantes</a>
+    <a [routerLink]="['/rooms', roomId, 'calendar']" routerLinkActive="active">Calendario</a>
+    <a [routerLink]="['/rooms', roomId, 'map']" routerLinkActive="active">Mapa</a>
+  </nav>
+
+  <div class="header-actions">
+    <!-- NUEVO COMPONENTE DE NOTIFICACIONES -->
+    <app-notification-menu/>
+
+    <app-icon-button icon="add_circle" (btnClick)="addNewElement()"/>
+
+    <app-profile-menu/>
+  </div>
+</header>

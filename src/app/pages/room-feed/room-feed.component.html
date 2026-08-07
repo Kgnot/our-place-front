@@ -1,87 +1,101 @@
 <div class="noise-overlay"></div>
 
-<main class="feed-main">
-  <button class="back-btn" (click)="goBack()">
-    <span class="material-symbols-outlined">arrow_back</span>
-    Volver a Rooms
-  </button>
+<app-room-header />
 
+
+<main class="feed-main">
   <div class="masonry-grid">
-    <!-- Tarjeta de Añadir Nueva Foto / Nota -->
+    <!-- Tarjeta de Añadir Nota -->
     <div class="masonry-item add-card-masonry">
       <div class="add-card-inner" (click)="openAddModal()">
-        <div class="add-icon">
-          <span class="material-symbols-outlined">add_a_photo</span>
-        </div>
-        <h3>Subir nuevo momento</h3>
-        <p>Deja una nota o recuerdo especial.</p>
+        <div class="add-icon"><span class="material-symbols-outlined">edit_note</span></div>
+        <h3>Escribir un recuerdo</h3>
+        <p>Deja una nota de amor.</p>
       </div>
     </div>
 
-    <!-- Estado de Carga -->
-    @if (isLoading()) {
-      <div class="masonry-item">
-        <div class="polaroid-card">
-          <p>Cargando recuerdos...</p>
-        </div>
-      </div>
-    }
-    @else if (notes().length === 0) {
-      <div class="masonry-item">
-        <div class="polaroid-card">
-          <p class="font-body-italic">Aún no hay recuerdos en este espacio.</p>
-        </div>
-      </div>
-    }
-    @else {
-      @for (note of notes(); track note.id) {
-        <article class="masonry-item group">
-          <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-6 washi-tape pink z-10"></div>
-
-          <div class="polaroid-card rotate-left">
-            <!-- Placeholder de color si no hay imagen -->
-            <div class="photo-placeholder" [style.background]="['#e5e2dc', '#f5f1e7', '#f0eee8'][$index % 3]">
-              <span class="material-symbols-outlined photo-icon">image</span>
+    <!-- FOTOS DE LA GALERÍA -->
+    @for (media of mediaItems(); track media.mediaId) {
+      <article class="masonry-item group">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-6 washi-tape green z-10"></div>
+        <div class="polaroid-card rotate-right">
+          @if (media.thumbnailUrl) {
+            <img [src]="media.thumbnailUrl" class="feed-photo" alt="Recuerdo" />
+          } @else {
+            <!-- Placeholder mientras genera thumbnail -->
+            <div class="photo-placeholder loading-shimmer">
+              <span class="material-symbols-outlined photo-icon">hourglass_top</span>
             </div>
-
-            <p class="handwritten-comment">
-              "{{ note.content }}"
-            </p>
-
-            <div class="card-footer">
-              <button class="like-btn">
-                <span class="material-symbols-outlined">favorite</span>
-                <span class="like-count">0</span>
-              </button>
-              <input type="text" class="comment-input" placeholder="Add comment..." />
-            </div>
+          }
+          <p class="handwritten-comment">{{ media.caption || 'Un nuevo recuerdo' }}</p>
+          <div class="card-footer">
+            <button class="like-btn"><span class="material-symbols-outlined">favorite</span><span class="like-count">0</span></button>
+            <input type="text" class="comment-input" placeholder="Add comment..." />
           </div>
-        </article>
-      }
+        </div>
+      </article>
+    }
+
+    <!-- NOTAS DE TEXTO (Love Notes) -->
+    @for (note of notes(); track note.id) {
+      <article class="masonry-item group">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-6 washi-tape pink z-10"></div>
+        <div class="polaroid-card rotate-left">
+          <div class="photo-placeholder" [style.background]="['#e5e2dc', '#f5f1e7', '#f0eee8'][$index % 3]">
+            <span class="material-symbols-outlined photo-icon">image</span>
+          </div>
+          <p class="handwritten-comment">"{{ note.content }}"</p>
+          <div class="card-footer">
+            <button class="like-btn"><span class="material-symbols-outlined">favorite</span><span class="like-count">0</span></button>
+            <input type="text" class="comment-input" placeholder="Add comment..." />
+          </div>
+        </div>
+      </article>
     }
   </div>
 </main>
 
-<!-- Modal para añadir nota (mismo estilo que el de perfil) -->
-@if (isAddModalOpen()) {
-  <div class="modal-backdrop" (click)="closeAddModal()">
+<!-- BOTÓN FLOTANTE (FAB) -->
+<button class="fab-btn" (click)="openFilePicker()" [disabled]="isUploading()">
+  <span class="material-symbols-outlined">add_a_photo</span>
+  <span class="fab-text">Agregar fotos</span>
+</button>
+
+<input #fileInput type="file" accept="image/*" multiple (change)="onFilesSelected($event)" style="display: none;" />
+
+<!-- MODAL DE PREVISUALIZACIÓN Y SUBIDA -->
+@if (isPreviewOpen()) {
+  <div class="modal-backdrop" (click)="closePreview()">
     <div class="modal-card" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h3>Nuevo Momento</h3>
-        <button class="icon-btn-sm" (click)="closeAddModal()">
+        <h3>Previsualizar ({{ selectedFiles().length }} fotos)</h3>
+        <button class="icon-btn-sm" (click)="closePreview()" [disabled]="isUploading()">
           <span class="material-symbols-outlined">close</span>
         </button>
       </div>
+
       <div class="modal-body">
-        <div class="form-group">
-          <label>¿Qué quieres recordar?</label>
-          <textarea class="form-control" rows="4" [ngModel]="newNoteContent()" (ngModelChange)="newNoteContent.set($event)" placeholder="Escribe una nota de amor o un recuerdo..."></textarea>
-        </div>
+        @if (isUploading()) {
+          <div class="uploading-state">
+            <div class="spinner"></div>
+            <p>{{ uploadStatus() }}</p>
+          </div>
+        } @else {
+          <div class="preview-grid">
+            @for (url of previewUrls(); track $index) {
+              <div class="preview-item">
+                <img [src]="url" alt="Preview" />
+              </div>
+            }
+          </div>
+        }
       </div>
+
       <div class="modal-footer">
-        <button class="btn btn-outlined" (click)="closeAddModal()">Cancelar</button>
-        <button class="btn btn-primary" (click)="saveNote()" [disabled]="isSaving()">
-          {{ isSaving() ? 'Guardando...' : 'Publicar' }}
+        <button class="btn btn-outlined" (click)="closePreview()" [disabled]="isUploading()">Cancelar</button>
+        <button class="btn btn-primary" (click)="uploadPhotos()" [disabled]="isUploading()">
+          <span class="material-symbols-outlined" style="font-size: 18px; margin-right: 4px;">cloud_upload</span>
+          Subir Recuerdos
         </button>
       </div>
     </div>

@@ -1,0 +1,28 @@
+<app-dropdown #dd>
+  <div trigger>
+    <app-icon-button icon="notifications" />
+  </div>
+
+  <div content>
+    <div class="dropdown-header">
+      <p class="dropdown-name">Notificaciones</p>
+    </div>
+    <div class="dropdown-divider"></div>
+
+    <div class="notification-list">
+      @if (notifications().length === 0) {
+        <p class="empty-state">No hay notificaciones nuevas.</p>
+      } @else {
+        @for (notif of notifications(); track notif.id) {
+          <div class="notification-item" (click)="dd.close()">
+            <span class="material-symbols-outlined notif-icon">{{ notif.icon }}</span>
+            <div class="notif-content">
+              <p class="notif-text">{{ notif.text }}</p>
+              <p class="notif-time">{{ notif.time }}</p>
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</app-dropdown>

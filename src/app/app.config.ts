@@ -15,5 +15,9 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
+    {
+      provide: 'MAPLIBRE_WORKER_URL',
+      useValue: new URL('maplibre-gl/dist/maplibre-gl-worker.mjs', import.meta.url).href,
+    },
   ],
 };

@@ -21,6 +21,7 @@ export class UserService {
       next: (user) => this.currentUser.set(user),
       error: (err) => console.error('Error al obtener usuario', err),
     });
+    console.log("[users.service.ts] Usuario cargado", this.currentUser());
   }
 
   // Actualizar perfil

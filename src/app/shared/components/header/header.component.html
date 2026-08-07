@@ -1,44 +1,15 @@
 <header class="op-header">
   <h1 class="brand-logo">ourplace</h1>
-
   <div class="header-actions">
-    <!-- Botón Buscar -->
     <button class="icon-btn" (click)="ui.toggleSearch()">
       <span class="material-symbols-outlined">search</span>
     </button>
 
-    <!-- Botón Perfil -->
-    <div class="profile-wrapper">
-      <button class="avatar-placeholder" (click)="toggleDropdown()">
-        @if (userService.currentUser()?.avatarUrl) {
-          <img [src]="userService.currentUser()!.avatarUrl!" alt="Avatar" class="avatar-img" />
-        } @else {
-          <span class="material-symbols-outlined">person</span>
-        }
-      </button>
-
-      @if (isDropdownOpen()) {
-        <div class="backdrop" (click)="closeDropdown()"></div>
-        <div class="dropdown-menu">
-          <div class="dropdown-header">
-            <p class="dropdown-name">{{ userService.currentUser()?.firstName }} {{ userService.currentUser()?.lastName }}</p>
-            <p class="dropdown-email">{{ userService.currentUser()?.email }}</p>
-          </div>
-          <div class="dropdown-divider"></div>
-          <button class="dropdown-item" (click)="openProfile()">
-            <span class="material-symbols-outlined">account_circle</span>
-            Tu Perfil
-          </button>
-          <button class="dropdown-item danger" (click)="logout()">
-            <span class="material-symbols-outlined">logout</span>
-            Cerrar Sesión
-          </button>
-        </div>
-      }
-    </div>
+    <!-- COMPONENTE REUTILIZABLE -->
+    <app-profile-menu />
   </div>
 </header>
 
-<!-- Componentes de UI Global (Modales y Overlays) -->
+<!-- El modal puede quedarse aquí o en el app.component, lo dejamos aquí por ahora -->
 <app-search-spaces />
 <app-profile-modal />

@@ -1,8 +1,8 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UiService } from '../../../services/ui.service';
-import { UserService } from '../../../services/user.service'; // <-- Cambio aquí
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-profile-modal',
@@ -11,9 +11,9 @@ import { UserService } from '../../../services/user.service'; // <-- Cambio aqu�
   templateUrl: './profile-modal.component.html',
   styleUrl: './profile-modal.component.css',
 })
-export class ProfileModalComponent implements OnInit {
+export class ProfileModalComponent {
   protected ui = inject(UiService);
-  private userService = inject(UserService); // <-- Cambio aquí
+  private userService = inject(UserService);
 
   firstName = signal('');
   lastName = signal('');
@@ -22,15 +22,17 @@ export class ProfileModalComponent implements OnInit {
   birthDate = signal('');
   isSaving = signal(false);
 
-  ngOnInit(): void {
-    const user = this.userService.currentUser(); // <-- Cambio aquí
-    if (user) {
-      this.firstName.set(user.firstName || '');
-      this.lastName.set(user.lastName || '');
-      this.email.set(user.email || '');
-      this.avatarUrl.set(user.avatarUrl || '');
-      this.birthDate.set(user.birthDate || '');
-    }
+  constructor() {
+    effect(() => {
+      const user = this.userService.currentUser();
+      if (user) {
+        this.firstName.set(user.firstName || '');
+        this.lastName.set(user.lastName || '');
+        this.email.set(user.email || '');
+        this.avatarUrl.set(user.avatarUrl || '');
+        this.birthDate.set(user.birthDate || '');
+      }
+    });
   }
 
   closeModal() {

@@ -1,0 +1,131 @@
+<app-room-header />
+
+<main class="calendar-main">
+  <section class="calendar-pane">
+    <div class="washi-tape washi-tape-top-left"></div>
+
+    <div class="calendar-header">
+      <div class="month-nav">
+        <button class="nav-btn" (click)="previousMonth()"><span class="material-symbols-outlined">chevron_left</span></button>
+        <h2>{{ months[viewDate().getMonth()] }} {{ viewDate().getFullYear() }}</h2>
+        <button class="nav-btn" (click)="nextMonth()"><span class="material-symbols-outlined">chevron_right</span></button>
+      </div>
+      <button class="today-btn">Today</button>
+    </div>
+
+    <div class="weekdays-grid">
+      @for (day of weekDays; track day) {
+        <div class="weekday">{{ day }}</div>
+      }
+    </div>
+
+    <div class="calendar-grid">
+      @for (blank of blankDays; track $index) {
+        <div class="calendar-cell empty"></div>
+      }
+
+      @for (day of daysInMonth; track day) {
+        @let dayInfo = getDayInfo(day);
+        <!-- Añadimos el click y la clase is-today -->
+        <div
+          class="calendar-cell"
+          [class.has-memory]="dayInfo?.hasEntry"
+          [class.is-today]="isToday(day)"
+          (click)="openDayModal(day)"
+        >
+          <span class="day-number">{{ day }}</span>
+
+          @if (dayInfo?.hasEntry) {
+            <div class="day-content">
+              @if (dayInfo?.medias && dayInfo.medias.length > 0) {
+                <img [src]="dayInfo?.medias?.[0].url" alt="Memory" class="day-thumbnail" />
+              } @else if (dayInfo?.moodEmoji) {
+                <span class="day-emoji">{{ dayInfo?.moodEmoji }}</span>
+              } @else {
+                <span class="day-dot"></span>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="calendar-footer">
+      <p>"Time spent together is a memory made."</p>
+    </div>
+  </section>
+
+  <section class="map-pane">
+    <app-map-view />
+    <div class="map-overlay">
+      <div class="map-location-badge">
+        <span class="material-symbols-outlined">location_on</span>
+        <span>Bogotá, Colombia</span>
+      </div>
+      <button class="map-full-btn">
+        <span class="material-symbols-outlined">fullscreen</span>
+        Full Map View
+      </button>
+    </div>
+    <div class="map-vignette"></div>
+  </section>
+</main>
+
+<!-- MODAL DEL DÍA -->
+@if (isModalOpen()) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Recuerdo del {{ selectedDate() }}</h3>
+        <button class="icon-btn-sm" (click)="closeModal()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Si ya hay una entrada, la mostramos -->
+        @if (selectedDayDetail()) {
+          <div class="existing-entry">
+            <p class="entry-content">{{ selectedDayDetail()?.content }}</p>
+
+            <!-- Placeholder para fotos existentes -->
+            <div class="photo-grid">
+              @for (media of selectedDayDetail()?.mediaIds; track media.id) {
+                <img [src]="media.url" class="entry-photo" />
+              }
+            </div>
+          </div>
+        } @else {
+          <p class="text-muted">Aún no hay recuerdos en este día. ¡Escribe uno!</p>
+        }
+
+        <hr class="divider" />
+
+        <!-- Formulario para añadir nueva nota -->
+        <div class="form-group">
+          <label>Añadir comentario o nota</label>
+          <textarea
+            class="form-control"
+            rows="3"
+            [ngModel]="newNoteContent()"
+            (ngModelChange)="newNoteContent.set($event)"
+            placeholder="¿Qué pasó este día?">
+          </textarea>
+        </div>
+
+        <!-- Placeholder para subir foto (requiere endpoint de galería) -->
+        <button class="upload-btn">
+          <span class="material-symbols-outlined">add_a_photo</span>
+          Subir foto
+        </button>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outlined" (click)="closeModal()">Cancelar</button>
+        <button class="btn btn-primary" (click)="saveNote()" [disabled]="isSaving()">
+          {{ isSaving() ? 'Guardando...' : 'Guardar Nota' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

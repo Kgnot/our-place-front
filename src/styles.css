@@ -1,3 +1,5 @@
+@import 'maplibre-gl/dist/maplibre-gl.css';
+
 :root {
   /* Tu paleta de colores */
   --color-primary: #D67D61;
@@ -148,4 +150,20 @@ body {
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   vertical-align: middle;
+}
+/*// MAP*/
+::ng-deep .map-photo-marker {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  border: 3px solid var(--color-white);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+::ng-deep .map-photo-marker:hover {
+  transform: scale(1.15);
+  border-color: var(--color-primary);
 }
