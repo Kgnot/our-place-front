@@ -6,12 +6,57 @@
       <span class="material-symbols-outlined">location_on</span>
       <span>Bogotá, Colombia</span>
     </div>
-    <button class="map-full-btn">
-      <span class="material-symbols-outlined">fullscreen</span>
-      Vista Completa
-    </button>
+    <div class="map-instruction-badge">
+      <span class="material-symbols-outlined">add_location_alt</span>
+      <span>Haz clic en el mapa para guardar un lugar</span>
+    </div>
   </div>
 
-  <!-- Contenedor del Mapa -->
   <div #mapContainer class="map-container"></div>
 </main>
+
+<!-- MODAL CREAR LUGAR -->
+@if (isModalOpen()) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Guardar nuevo lugar</h3>
+        <button class="icon-btn-sm" (click)="closeModal()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p class="coords-text">
+          Coordenadas: {{ newPlaceCoords()?.lng?.toFixed(4) }}, {{ newPlaceCoords()?.lat?.toFixed(4) }}
+        </p>
+
+        <div class="form-group">
+          <label>Nombre del lugar</label>
+          <input type="text" class="form-control" [ngModel]="newPlaceName()" (ngModelChange)="newPlaceName.set($event)" placeholder="Ej: Café favorito" />
+        </div>
+
+        <div class="form-group">
+          <label>Categoría</label>
+          <select class="form-control" [ngModel]="newPlaceCategory()" (ngModelChange)="newPlaceCategory.set($event)">
+            @for (cat of categories(); track cat.code) {
+              <option [value]="cat.code">{{ cat.name }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Descripción / Recuerdo</label>
+          <textarea class="form-control" rows="3" [ngModel]="newPlaceDesc()" (ngModelChange)="newPlaceDesc.set($event)" placeholder="¿Qué pasó aquí?"></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outlined" (click)="closeModal()">Cancelar</button>
+        <button class="btn btn-primary" (click)="savePlace()" [disabled]="isSaving()">
+          {{ isSaving() ? 'Guardando...' : 'Guardar Lugar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

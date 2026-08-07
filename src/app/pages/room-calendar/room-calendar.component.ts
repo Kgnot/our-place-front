@@ -2,9 +2,10 @@ import { Component, inject, afterNextRender, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { CalendarService } from '../../services/calendar.service';
+import { GalleryService } from '../../services/gallery.service'; // <-- IMPORT
 import { RoomHeaderComponent } from '../../shared/components/room-header/room-header.component';
 import { MapViewComponent } from '../../shared/components/map-view/map-view.component';
-import { FormsModule } from '@angular/forms'; //
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-room-calendar',
@@ -16,6 +17,7 @@ import { FormsModule } from '@angular/forms'; //
 export class RoomCalendarComponent {
   private route = inject(ActivatedRoute);
   private calendarService = inject(CalendarService);
+  private galleryService = inject(GalleryService); // <-- INYECTAR
 
   currentMonth = this.calendarService.currentMonth;
   isLoading = this.calendarService.isLoading;
@@ -24,7 +26,6 @@ export class RoomCalendarComponent {
   viewDate = signal(new Date());
   roomId = signal('');
 
-  // Estado del modal
   isModalOpen = signal(false);
   selectedDate = signal<string>('');
   newNoteContent = signal('');
@@ -79,7 +80,6 @@ export class RoomCalendarComponent {
     return this.currentMonth()?.days.find((d) => d.date === isoDate);
   }
 
-  //  Saber si el día es hoy
   isToday(day: number): boolean {
     const date = this.viewDate();
     const today = new Date();
@@ -90,16 +90,12 @@ export class RoomCalendarComponent {
     );
   }
 
-  // Abrir modal del día
   openDayModal(day: number) {
     const date = this.viewDate();
     const isoDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-
     this.selectedDate.set(isoDate);
     this.newNoteContent.set('');
     this.isModalOpen.set(true);
-
-    // Cargamos el detalle de ese día desde el backend
     this.calendarService.getDayDetail(this.roomId(), isoDate);
   }
 
@@ -107,17 +103,15 @@ export class RoomCalendarComponent {
     this.isModalOpen.set(false);
   }
 
-  // NUEVO: Guardar la nota del día
   saveNote() {
     if (!this.newNoteContent().trim()) return;
-
     this.isSaving.set(true);
     this.calendarService
       .createDayEntry(this.roomId(), this.selectedDate(), this.newNoteContent())
       .subscribe({
         next: () => {
           this.isSaving.set(false);
-          this.fetchMonthData(); // Recargamos el mes para que aparezca el puntito
+          this.fetchMonthData();
           this.closeModal();
         },
         error: (err) => {

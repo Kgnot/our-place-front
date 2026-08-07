@@ -6,6 +6,7 @@ import { GalleryService } from '../../services/gallery.service';
 import { FormsModule } from '@angular/forms';
 import { RoomHeaderComponent } from '../../shared/components/room-header/room-header.component';
 import { firstValueFrom, forkJoin } from 'rxjs';
+import { extractExif } from '../../utils/exif.util'; // <-- IMPORT EXIF
 
 @Component({
   selector: 'app-room-feed',
@@ -86,15 +87,18 @@ export class RoomFeedComponent {
     if (files.length === 0) return;
 
     this.isUploading.set(true);
-    this.uploadStatus.set('Preparando subida...');
+    this.uploadStatus.set('Leyendo metadatos de las fotos...');
 
     try {
+      // 0. EXTRAER EXIF de cada archivo (en paralelo)
+      const exifData = await Promise.all(files.map((file) => extractExif(file)));
+
       // 1. PRESIGN
+      this.uploadStatus.set('Preparando subida...');
       const entries = files.map((file) => ({
         mediaTypeCode: file.type.startsWith('video') ? 'video' : 'photo',
         mimeType: file.type,
         fileSizeBytes: file.size,
-        takenAt: null,
       }));
 
       const presignRes = await firstValueFrom(
@@ -110,18 +114,20 @@ export class RoomFeedComponent {
 
       const uploadResults = await firstValueFrom(forkJoin(uploadObservables));
 
-      // Filtrar las que sí subieron
+      // Filtrar las que sí subieron y mapear con el EXIF
       const succeededItems = presignedItems
-        .filter((_, i) => uploadResults[i] === true)
-        .map((item) => ({
+        .map((item, index) => ({ item, index }))
+        .filter(({ index }) => uploadResults[index] === true)
+        .map(({ item, index }) => ({
           mediaId: item.mediaId,
           r2Key: item.r2Key,
-          mediaTypeCode: 'photo', // Ajusta si es video
-          mimeType:
-            files.find((f) => f.name === files[presignedItems.indexOf(item)].name)?.type ||
-            'image/jpeg',
-          fileSizeBytes: files[presignedItems.indexOf(item)].size,
-          takenAt: null,
+          mediaTypeCode: files[index].type.startsWith('video') ? 'video' : 'photo',
+          mimeType: files[index].type,
+          fileSizeBytes: files[index].size,
+          // ↓↓↓ Metadatos del EXIF ↓↓↓
+          takenAt: exifData[index].takenAt,
+          latitude: exifData[index].latitude,
+          longitude: exifData[index].longitude,
           caption: null,
         }));
 
@@ -131,20 +137,20 @@ export class RoomFeedComponent {
         return;
       }
 
-      // 3. CONFIRM
+      // 3. CONFIRM con los datos del EXIF
       this.uploadStatus.set('Confirmando con el servidor...');
       const confirmedMedia = await firstValueFrom(
         this.galleryService.confirmUpload(this.roomId(), succeededItems),
       );
 
-      // Añadimos al estado local con thumbnail en null (placeholder)
+      // Añadimos al estado local
       this.mediaItems.update((prev) => [...confirmedMedia, ...prev]);
 
       this.isUploading.set(false);
       this.closePreview();
 
-      // 4. POLLING (Esperar thumbnails)
-      this.pollForThumbnails(confirmedMedia.map((m: any) => m.mediaId));
+      // 4. POLLING para thumbnails
+      this.pollForThumbnails(confirmedMedia.map((m: any) => m.id || m.mediaId)); // Validamos si viene id o mediaId
     } catch (error) {
       console.error('Error en el flujo de subida', error);
       this.isUploading.set(false);

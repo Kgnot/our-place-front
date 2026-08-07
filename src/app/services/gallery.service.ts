@@ -18,19 +18,6 @@ export class GalleryService {
     );
   }
 
-  // Paso 2: Subir directo a R2 (PUT)
-  // uploadToR2(uploadUrl: string, file: File): Observable<boolean> {
-  //   return this.http
-  //     .put(uploadUrl, file, {
-  //       headers: { 'Content-Type': file.type },
-  //       observe: 'response',
-  //       reportProgress: true, // Opcional, si quieres mostrar progreso
-  //     })
-  //     .pipe(
-  //       map((res) => res.ok),
-  //       catchError(() => of(false)),
-  //     );
-  // }
   uploadToR2(url: string, file: File): Observable<boolean> {
     return from(
       fetch(url, {

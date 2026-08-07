@@ -1,4 +1,4 @@
-<app-room-header />
+<app-room-header/>
 
 <main class="calendar-main">
   <section class="calendar-pane">
@@ -6,9 +6,11 @@
 
     <div class="calendar-header">
       <div class="month-nav">
-        <button class="nav-btn" (click)="previousMonth()"><span class="material-symbols-outlined">chevron_left</span></button>
+        <button class="nav-btn" (click)="previousMonth()"><span class="material-symbols-outlined">chevron_left</span>
+        </button>
         <h2>{{ months[viewDate().getMonth()] }} {{ viewDate().getFullYear() }}</h2>
-        <button class="nav-btn" (click)="nextMonth()"><span class="material-symbols-outlined">chevron_right</span></button>
+        <button class="nav-btn" (click)="nextMonth()"><span class="material-symbols-outlined">chevron_right</span>
+        </button>
       </div>
       <button class="today-btn">Today</button>
     </div>
@@ -26,37 +28,44 @@
 
       @for (day of daysInMonth; track day) {
         @let dayInfo = getDayInfo(day);
-        <!-- Añadimos el click y la clase is-today -->
         <div
           class="calendar-cell"
-          [class.has-memory]="dayInfo?.hasEntry"
+          [class.has-memory]="dayInfo?.hasEntry || dayInfo?.hasPhotos"
           [class.is-today]="isToday(day)"
           (click)="openDayModal(day)"
         >
           <span class="day-number">{{ day }}</span>
+          @if (dayInfo) {
 
-          @if (dayInfo?.hasEntry) {
-            <div class="day-content">
-              @if (dayInfo?.medias && dayInfo.medias.length > 0) {
-                <img [src]="dayInfo?.medias?.[0].url" alt="Memory" class="day-thumbnail" />
-              } @else if (dayInfo?.moodEmoji) {
-                <span class="day-emoji">{{ dayInfo?.moodEmoji }}</span>
-              } @else {
-                <span class="day-dot"></span>
-              }
-            </div>
+            @if (dayInfo.hasPhotos && dayInfo.previewPhotos.length > 0) {
+              <!-- COLECCIÓN DE FOTOS (Círculos) -->
+              <div class="day-photos-collection" [class.multiple]="dayInfo.previewPhotos.length > 1">
+                @for (photo of dayInfo?.previewPhotos; track photo.id) {
+                  <img [src]="photo.thumbnailUrl" class="day-photo-circle" alt="Memory"/>
+                }
+              </div>
+            } @else if (dayInfo.hasEntry) {
+              <!-- Si hay nota pero no fotos -->
+              <div class="day-content">
+                @if (dayInfo.moodEmoji) {
+                  <span class="day-emoji">{{ dayInfo.moodEmoji }}</span>
+                } @else {
+                  <span class="day-dot"></span>
+                }
+              </div>
+            }
           }
         </div>
       }
-    </div>
 
+    </div>
     <div class="calendar-footer">
       <p>"Time spent together is a memory made."</p>
     </div>
   </section>
 
   <section class="map-pane">
-    <app-map-view />
+    <app-map-view/>
     <div class="map-overlay">
       <div class="map-location-badge">
         <span class="material-symbols-outlined">location_on</span>
@@ -91,7 +100,7 @@
             <!-- Placeholder para fotos existentes -->
             <div class="photo-grid">
               @for (media of selectedDayDetail()?.mediaIds; track media.id) {
-                <img [src]="media.url" class="entry-photo" />
+                <img [src]="media.thumbnailUrl" class="entry-photo"/>
               }
             </div>
           </div>
@@ -99,7 +108,7 @@
           <p class="text-muted">Aún no hay recuerdos en este día. ¡Escribe uno!</p>
         }
 
-        <hr class="divider" />
+        <hr class="divider"/>
 
         <!-- Formulario para añadir nueva nota -->
         <div class="form-group">

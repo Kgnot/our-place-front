@@ -197,3 +197,75 @@
 .upload-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Colección de fotos en el día (estilo bolitas) */
+.day-photos-collection {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 2;
+}
+
+/* Si es solo 1 foto, la hacemos un poco más grande para que se note */
+.day-photos-collection:not(.multiple) .day-photo-circle {
+  width: 25px;
+  height: 25px;
+}
+
+/* Si hay varias, las hacemos pequeñitas como puntos */
+.day-photos-collection.multiple .day-photo-circle {
+  width: 10px;
+  height: 10px;
+}
+
+.day-photo-circle {
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid white;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Arreglar el mapa dentro del calendario */
+.map-pane {
+  flex: 1;
+  background: #e5e2dc;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(61, 58, 53, 0.06);
+  position: relative;
+  overflow: hidden;
+  min-height: 400px;
+  display: flex; /* Aseguramos que el mapa llene el espacio */
+}
+
+.map-pane app-map-view {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+}
+
+/* Mini preview de Nota/Emoji arriba a la derecha */
+.day-mini-preview {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(214, 125, 97, 0.15);
+  border-radius: 4px;
+  padding: 2px 4px;
+  z-index: 2;
+}
+.mini-emoji {
+  font-size: 12px;
+  line-height: 1;
+}
+.mini-note-icon {
+  font-size: 12px;
+  color: var(--color-primary);
+}

@@ -81,3 +81,81 @@
   /* Filtro para darle un toque más vintage/nostálgico al mapa */
   filter: sepia(20%) saturate(80%) brightness(95%);
 }
+
+.map-page {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 80px);
+  padding-top: 80px;
+  box-sizing: border-box;
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+  background: #e5e2dc;
+  filter: sepia(20%) saturate(80%) brightness(95%);
+}
+
+.map-overlay {
+  position: absolute;
+  top: 100px;
+  left: 24px;
+  right: 24px;
+  display: flex;
+  justify-content: space-between;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.map-location-badge, .map-instruction-badge {
+  background: rgba(252, 249, 243, 0.95);
+  backdrop-filter: blur(4px);
+  padding: 8px 16px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  font-size: 14px;
+  font-weight: 600;
+  pointer-events: auto;
+}
+.map-location-badge .material-symbols-outlined { font-size: 18px; color: var(--color-primary); }
+.map-instruction-badge { font-size: 12px; color: var(--color-text-light); }
+
+/* Marker de lugar guardado */
+::ng-deep .map-place-marker {
+  width: 36px;
+  height: 36px;
+  background: var(--color-primary);
+  border: 3px solid white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  transition: transform 0.2s;
+}
+::ng-deep .map-place-marker:hover {
+  transform: scale(1.15);
+}
+::ng-deep .map-place-marker .material-symbols-outlined {
+  font-size: 18px;
+}
+
+/* Modal (reutilizamos estilos) */
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 100; animation: fadeIn 0.2s ease; }
+.modal-card { background: var(--color-white); border-radius: 16px; width: 100%; max-width: 450px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid var(--color-border); }
+.modal-header h3 { font-family: 'Literata', serif; font-size: 22px; }
+.modal-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.modal-footer { padding: 16px 24px; display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid var(--color-border); }
+.icon-btn-sm { border: none; background: transparent; cursor: pointer; padding: 4px; border-radius: 50%; color: var(--color-text-light); }
+.icon-btn-sm:hover { background: var(--color-neutral); }
+
+.coords-text { font-size: 12px; color: var(--color-text-light); background: var(--color-neutral); padding: 8px 12px; border-radius: 8px; margin: 0; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

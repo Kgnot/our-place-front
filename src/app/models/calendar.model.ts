@@ -1,14 +1,17 @@
-export interface MediaDetail {
+export interface PreviewPhoto {
   id: string;
-  url: string;
+  thumbnailUrl: string;
+  mediaTypeCode: string;
+  takenAt: string | null;
 }
 
 export interface CalendarDay {
-  date: string; // ISO string (YYYY-MM-DD)
+  date: string;
   hasEntry: boolean;
   moodEmoji: string | null;
-  medias: MediaDetail[];
-  mediaCount: number;
+  hasPhotos: boolean;
+  photoCount: number;
+  previewPhotos: PreviewPhoto[];
 }
 
 export interface CalendarMonth {
@@ -21,5 +24,5 @@ export interface DayEntryDetail {
   date: string;
   content: string;
   moodEmoji: string;
-  mediaIds: MediaDetail[];
+  mediaIds: PreviewPhoto[]; // Actualizamos esto también
 }
