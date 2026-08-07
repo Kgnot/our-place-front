@@ -5,6 +5,14 @@ export interface PreviewPhoto {
   takenAt: string | null;
 }
 
+export interface CalendarImportantDate {
+  id: string;
+  typeCode: string;
+  typeName: string;
+  title: string;
+  isRecurring: boolean;
+}
+
 export interface CalendarDay {
   date: string;
   hasEntry: boolean;
@@ -12,7 +20,9 @@ export interface CalendarDay {
   hasPhotos: boolean;
   photoCount: number;
   previewPhotos: PreviewPhoto[];
+  importantDates: CalendarImportantDate[];
 }
+
 
 export interface CalendarMonth {
   year: number;
@@ -24,5 +34,6 @@ export interface DayEntryDetail {
   date: string;
   content: string;
   moodEmoji: string;
-  mediaIds: PreviewPhoto[]; // Actualizamos esto también
+  mediaIds: PreviewPhoto[];
+  importantDates: CalendarImportantDate[];
 }

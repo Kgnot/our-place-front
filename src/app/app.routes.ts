@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { RoomFeedComponent } from './pages/room-feed/room-feed.component';
 import { RoomCalendarComponent } from './pages/room-calendar/room-calendar.component';
 import { RoomMapComponent } from './pages/room-map/room-map.component';
+import { RoomDatesComponent } from './pages/room-dates/room-dates.component';
 
 const authGuard = () => {
   const auth = inject(AuthService);
@@ -23,7 +24,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'rooms', component: RoomsComponent, canActivate: [authGuard] },
   { path: 'rooms/:roomId', component: RoomFeedComponent, canActivate: [authGuard] },
-  { path: 'rooms/:roomId/dates', component: RoomFeedComponent, canActivate: [authGuard] }, // Temporal
-  { path: 'rooms/:roomId/calendar', component: RoomCalendarComponent, canActivate: [authGuard] }, // Temporal
-  { path: 'rooms/:roomId/map', component: RoomMapComponent, canActivate: [authGuard] }, // Temporal
+  { path: 'rooms/:roomId/calendar', component: RoomCalendarComponent, canActivate: [authGuard] },
+  { path: 'rooms/:roomId/map', component: RoomMapComponent, canActivate: [authGuard] },
+  { path: 'rooms/:roomId/dates', component: RoomDatesComponent, canActivate: [authGuard] },
 ];

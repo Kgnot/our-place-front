@@ -1,0 +1,33 @@
+@if (place()) {
+  <div class="place-detail-view">
+    <!-- Icono grande de la categoría -->
+    <div class="detail-icon">
+      <span class="material-symbols-outlined">{{ getCategoryIcon(place()!.categoryCode) }}</span>
+    </div>
+
+    <!-- Descripción / Historia -->
+    <div class="detail-section">
+      <h4>Nuestra historia aquí</h4>
+      <p class="detail-text">
+        {{ place()?.description || 'Aún no han dejado un recuerdo escrito para este lugar.' }}
+      </p>
+    </div>
+
+    <!-- Fecha de visita -->
+    @if (place()?.visitedAt) {
+      <div class="detail-section">
+        <h4>Visitado el</h4>
+        <p>{{ place()?.visitedAt | date:'longDate' }}</p>
+      </div>
+    }
+
+    <!-- Placeholder para fotos futuras -->
+    <div class="detail-section">
+      <h4>Fotos en este lugar</h4>
+      <div class="photo-placeholder-list">
+        <span class="material-symbols-outlined">add_a_photo</span>
+        <p>Aún no hay fotos vinculadas a este punto.</p>
+      </div>
+    </div>
+  </div>
+}

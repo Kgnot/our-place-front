@@ -1,0 +1,26 @@
+@if (isOpen()) {
+  <div class="drawer-backdrop" (click)="closePanel.emit()"></div>
+  <div class="drawer-panel">
+    <div class="drawer-header">
+      <div>
+        @if (subtitle()) {
+          <p class="drawer-subtitle">{{ subtitle() }}</p>
+        }
+        <h3 class="drawer-title">{{ title() }}</h3>
+      </div>
+      <button class="icon-btn-sm" (click)="closePanel.emit()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <div class="drawer-body">
+      <!-- Aquí se inyecta el contenido específico (ej. el detalle del mapa) -->
+      <ng-content></ng-content>
+    </div>
+
+    <!-- Footer opcional -->
+    <div class="drawer-footer">
+      <ng-content select="[drawer-footer]"></ng-content>
+    </div>
+  </div>
+}

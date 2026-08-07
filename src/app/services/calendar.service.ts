@@ -2,6 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environments } from '../../environments/environments';
 import { CalendarMonth, DayEntryDetail } from '../models/calendar.model';
+import { CreateImportantDatePayload, ImportantDate } from '../models/important-date.model';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +11,7 @@ export class CalendarService {
   private http = inject(HttpClient);
   private apiUrl = `${environments.apiUrl}/rooms`;
 
+  readonly importantDates = signal<ImportantDate[]>([]);
   readonly currentMonth = signal<CalendarMonth | null>(null);
   readonly selectedDayDetail = signal<DayEntryDetail | null>(null);
   readonly isLoading = signal(false);
@@ -48,5 +50,16 @@ export class CalendarService {
       content: content,
       moodEmoji: moodEmoji,
     });
+  }
+
+  loadImportantDates(roomId: string) {
+    this.http.get<ImportantDate[]>(`${this.apiUrl}/${roomId}/important-dates`).subscribe({
+      next: (data) => this.importantDates.set(data),
+      error: (err) => console.error('Error al obtener fechas importantes', err),
+    });
+  }
+
+  createImportantDate(roomId: string, payload: CreateImportantDatePayload) {
+    return this.http.post<ImportantDate>(`${this.apiUrl}/${roomId}/important-dates`, payload);
   }
 }

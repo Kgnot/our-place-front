@@ -1,4 +1,4 @@
-<app-room-header />
+<app-room-header/>
 
 <main class="map-page">
   <div class="map-overlay">
@@ -15,27 +15,25 @@
   <div #mapContainer class="map-container"></div>
 </main>
 
-<!-- MODAL CREAR LUGAR -->
-@if (isModalOpen()) {
-  <div class="modal-backdrop" (click)="closeModal()">
+<!-- MODAL PARA CREAR PUNTO (Centrado) -->
+@if (isCreateModalOpen()) {
+  <div class="modal-backdrop" (click)="closeCreateModal()">
     <div class="modal-card" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h3>Guardar nuevo lugar</h3>
-        <button class="icon-btn-sm" (click)="closeModal()">
+        <button class="icon-btn-sm" (click)="closeCreateModal()">
           <span class="material-symbols-outlined">close</span>
         </button>
       </div>
-
       <div class="modal-body">
         <p class="coords-text">
           Coordenadas: {{ newPlaceCoords()?.lng?.toFixed(4) }}, {{ newPlaceCoords()?.lat?.toFixed(4) }}
         </p>
-
         <div class="form-group">
           <label>Nombre del lugar</label>
-          <input type="text" class="form-control" [ngModel]="newPlaceName()" (ngModelChange)="newPlaceName.set($event)" placeholder="Ej: Café favorito" />
+          <input type="text" class="form-control" [ngModel]="newPlaceName()" (ngModelChange)="newPlaceName.set($event)"
+                 placeholder="Ej: Café favorito"/>
         </div>
-
         <div class="form-group">
           <label>Categoría</label>
           <select class="form-control" [ngModel]="newPlaceCategory()" (ngModelChange)="newPlaceCategory.set($event)">
@@ -44,15 +42,14 @@
             }
           </select>
         </div>
-
         <div class="form-group">
           <label>Descripción / Recuerdo</label>
-          <textarea class="form-control" rows="3" [ngModel]="newPlaceDesc()" (ngModelChange)="newPlaceDesc.set($event)" placeholder="¿Qué pasó aquí?"></textarea>
+          <textarea class="form-control" rows="3" [ngModel]="newPlaceDesc()" (ngModelChange)="newPlaceDesc.set($event)"
+                    placeholder="¿Qué pasó aquí?"></textarea>
         </div>
       </div>
-
       <div class="modal-footer">
-        <button class="btn btn-outlined" (click)="closeModal()">Cancelar</button>
+        <button class="btn btn-outlined" (click)="closeCreateModal()">Cancelar</button>
         <button class="btn btn-primary" (click)="savePlace()" [disabled]="isSaving()">
           {{ isSaving() ? 'Guardando...' : 'Guardar Lugar' }}
         </button>
@@ -60,3 +57,17 @@
     </div>
   </div>
 }
+
+<!-- SIDEBAR PARA VER PUNTO (Lateral Derecho) -->
+<app-side-panel
+  [isOpen]="sidePanel.isOpen()"
+  [title]="selectedPlace()?.name || 'Lugar'"
+  [subtitle]="selectedPlace()?.categoryName"
+  (closePanel)="sidePanel.close()"
+>
+  <app-map-place-detail [place]="selectedPlace()"/>
+
+  <div drawer-footer>
+    <button class="btn btn-outlined" (click)="sidePanel.close()">Cerrar</button>
+  </div>
+</app-side-panel>

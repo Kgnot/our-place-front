@@ -269,3 +269,24 @@
   font-size: 12px;
   color: var(--color-primary);
 }
+
+/* Badge para Fechas Importantes */
+.important-date-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(214, 125, 97, 0.2); /* Terracota suave */
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  z-index: 2;
+}
+
+.important-date-badge .material-symbols-outlined {
+  font-size: 11px;
+  color: var(--color-primary);
+  font-variation-settings: 'FILL' 1;
+}

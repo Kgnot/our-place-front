@@ -28,34 +28,44 @@
 
       @for (day of daysInMonth; track day) {
         @let dayInfo = getDayInfo(day);
-        <div
-          class="calendar-cell"
-          [class.has-memory]="dayInfo?.hasEntry || dayInfo?.hasPhotos"
-          [class.is-today]="isToday(day)"
-          (click)="openDayModal(day)"
-        >
-          <span class="day-number">{{ day }}</span>
-          @if (dayInfo) {
+        @if (dayInfo) {
 
-            @if (dayInfo.hasPhotos && dayInfo.previewPhotos.length > 0) {
-              <!-- COLECCIÓN DE FOTOS (Círculos) -->
-              <div class="day-photos-collection" [class.multiple]="dayInfo.previewPhotos.length > 1">
-                @for (photo of dayInfo?.previewPhotos; track photo.id) {
-                  <img [src]="photo.thumbnailUrl" class="day-photo-circle" alt="Memory"/>
-                }
+          <div
+            class="calendar-cell"
+            [class.has-memory]="dayInfo?.hasEntry || dayInfo?.hasPhotos || (dayInfo?.importantDates && dayInfo.importantDates.length > 0)"
+            [class.is-today]="isToday(day)"
+            (click)="openDayModal(day)"
+          >
+            <span class="day-number">{{ day }}</span>
+
+            <!-- MINI PREVIEW DE FECHA IMPORTANTE (Arriba a la derecha) -->
+            @if (dayInfo?.importantDates && dayInfo.importantDates.length > 0) {
+              <div class="important-date-badge" title="{{ dayInfo.importantDates[0].title }}">
+                <span class="material-symbols-outlined">cake</span>
               </div>
-            } @else if (dayInfo.hasEntry) {
-              <!-- Si hay nota pero no fotos -->
-              <div class="day-content">
-                @if (dayInfo.moodEmoji) {
-                  <span class="day-emoji">{{ dayInfo.moodEmoji }}</span>
+            } @else if (dayInfo?.hasEntry) {
+              <!-- Si no hay fecha importante pero hay nota, mostramos el emoji -->
+              <div class="day-mini-preview">
+                @if (dayInfo?.moodEmoji) {
+                  <span class="mini-emoji">{{ dayInfo.moodEmoji }}</span>
                 } @else {
-                  <span class="day-dot"></span>
+                  <span class="material-symbols-outlined mini-note-icon">description</span>
                 }
               </div>
             }
-          }
+
+
+            <!-- FOTOS ABAJO A LA IZQUIERDA -->
+            @if (dayInfo?.hasPhotos && dayInfo.previewPhotos.length > 0) {
+              <div class="day-photos-collection" [class.multiple]="dayInfo.previewPhotos.length > 1">
+                @for (photo of dayInfo.previewPhotos; track photo.id) {
+                  <img [src]="photo.thumbnailUrl" class="day-photo-circle" alt="Memory"/>
+                }
+              </div>
+            }
+
         </div>
+        }
       }
 
     </div>

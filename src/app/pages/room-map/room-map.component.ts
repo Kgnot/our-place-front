@@ -1,33 +1,51 @@
-import { Component, ElementRef, ViewChild, inject, afterNextRender, signal } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  inject,
+  afterNextRender,
+  signal,
+  effect,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { MapService } from '../../services/map.service';
+import { MapManagerService } from '../../services/map-manager.service'; // <-- Nuevo!
 import { RoomHeaderComponent } from '../../shared/components/room-header/room-header.component';
 import { FormsModule } from '@angular/forms';
-import { Map, NavigationControl, Marker, LngLat } from 'maplibre-gl';
 import { PlaceCategory, SavedPlace } from '../../models/map.model';
+import { SidePanelService } from '../../services/side-panel.service';
+import { MapPlaceDetailComponent } from './components/map-place-detail/map-place-detail.component';
+import { SidePanelComponent } from '../../shared/components/side-panel/side-panel.component';
 
 @Component({
   selector: 'app-room-map',
   standalone: true,
-  imports: [CommonModule, RoomHeaderComponent, FormsModule],
+  imports: [
+    CommonModule,
+    RoomHeaderComponent,
+    FormsModule,
+    MapPlaceDetailComponent,
+    SidePanelComponent,
+  ],
   templateUrl: './room-map.component.html',
   styleUrl: './room-map.component.css',
 })
 export class RoomMapComponent {
   @ViewChild('mapContainer') mapContainer!: ElementRef;
-  private mapService = inject(MapService);
+
   private route = inject(ActivatedRoute);
+  private mapManager = inject(MapManagerService);
+  private mapService = inject(MapService);
+  sidePanel = inject(SidePanelService);
 
   roomId = signal('');
-  private mapInstance!: Map;
-
-  // Estado de categorías y lugares
   categories = signal<PlaceCategory[]>([]);
   savedPlaces = signal<SavedPlace[]>([]);
+  selectedPlace = signal<SavedPlace | null>(null);
 
-  // Estado del modal de creación
-  isModalOpen = signal(false);
+  // Modal Crear
+  isCreateModalOpen = signal(false);
   newPlaceCoords = signal<{ lng: number; lat: number } | null>(null);
   newPlaceName = signal('');
   newPlaceDesc = signal('');
@@ -36,95 +54,65 @@ export class RoomMapComponent {
 
   constructor() {
     afterNextRender(() => {
-      this.initMap();
-      this.loadCategories();
-    });
-  }
+      // 1. Inicializamos el mapa a través del manager
+      this.mapManager.init(this.mapContainer.nativeElement);
 
-  initMap() {
-    const id = this.route.snapshot.paramMap.get('roomId');
-    if (id) this.roomId.set(id);
-
-    const map = new Map({
-      container: this.mapContainer.nativeElement,
-      style: this.mapService.getOSMStyle(),
-      center: [-74.0721, 4.711],
-      zoom: 11,
+      const id = this.route.snapshot.paramMap.get('roomId');
+      if (id) {
+        this.roomId.set(id);
+        this.loadCategories();
+        this.loadSavedPlaces();
+      }
     });
 
-    map.addControl(new NavigationControl(), 'top-right');
-    this.mapInstance = map;
-
-    map.on('load', () => {
-      this.loadSavedPlaces();
+    // 2. Reaccionamos a los eventos del mapa usando Signals
+    effect(() => {
+      const place = this.mapManager.placeClicked();
+      if (place) {
+        this.openViewPanel(place);
+        this.mapManager.placeClicked.set(null);
+      }
     });
 
-    // Al hacer clic en el mapa (no en un marker), abrimos el modal
-    map.on('click', (e: any) => {
-      this.openCreateModal(e.lngLat);
+    effect(() => {
+      const coords = this.mapManager.emptyMapClicked();
+      if (coords) {
+        this.openCreateModal(coords);
+        this.mapManager.emptyMapClicked.set(null); // Resetear
+      }
     });
   }
 
   loadCategories() {
-    this.mapService.getPlaceCategories().subscribe({
-      next: (cats) => {
-        this.categories.set(cats);
-        if (cats.length > 0) this.newPlaceCategory.set(cats[0].code);
-      },
+    this.mapService.getPlaceCategories().subscribe((cats) => {
+      this.categories.set(cats);
+      if (cats.length > 0) this.newPlaceCategory.set(cats[0].code);
     });
   }
 
   loadSavedPlaces() {
-    this.mapService.getSavedPlaces(this.roomId()).subscribe({
-      next: (places) => {
-        this.savedPlaces.set(places);
-        // Pintar markers en el mapa
-        places.forEach((place) => this.addPlaceMarker(place));
-      },
+    this.mapService.getSavedPlaces(this.roomId()).subscribe((places) => {
+      this.savedPlaces.set(places);
+      this.mapManager.renderPlaces(places);
     });
   }
 
-  addPlaceMarker(place: SavedPlace) {
-    const coords = this.mapService.parseWkt(place.locationWkt);
-    if (!coords) return;
-
-    const el = document.createElement('div');
-    el.className = 'map-place-marker';
-    el.innerHTML = `<span class="material-symbols-outlined">${this.getCategoryIcon(place.categoryCode)}</span>`;
-
-    el.addEventListener('click', (e) => {
-      e.stopPropagation(); // Evita que se abra el modal de crear
-      alert(`Lugar: ${place.name}\n${place.description}`);
-    });
-
-    new Marker(el).setLngLat([coords.lng, coords.lat]).addTo(this.mapInstance);
+  // --- SidePanel ---
+  openViewPanel(place: SavedPlace) {
+    this.selectedPlace.set(place);
+    this.sidePanel.open();
   }
 
-  getCategoryIcon(code: string): string {
-    switch (code) {
-      case 'restaurant':
-        return 'restaurant';
-      case 'park':
-        return 'park';
-      case 'hotel':
-        return 'hotel';
-      case 'first_date':
-        return 'favorite';
-      default:
-        return 'push_pin';
-    }
-  }
-
-  // --- Modal Creación ---
-  openCreateModal(lngLat: LngLat) {
-    this.newPlaceCoords.set({ lng: lngLat.lng, lat: lngLat.lat });
+  // --- Modal Crear ---
+  openCreateModal(coords: { lng: number; lat: number }) {
+    this.newPlaceCoords.set(coords);
     this.newPlaceName.set('');
     this.newPlaceDesc.set('');
-    this.isModalOpen.set(true);
+    this.isCreateModalOpen.set(true);
   }
 
-  closeModal() {
-    this.isModalOpen.set(false);
+  closeCreateModal() {
+    this.isCreateModalOpen.set(false);
     this.newPlaceCoords.set(null);
   }
 
@@ -138,15 +126,18 @@ export class RoomMapComponent {
       name: this.newPlaceName(),
       description: this.newPlaceDesc(),
       locationWkt: this.mapService.toWkt(coords!.lng, coords!.lat),
-      visitedAt: null, // Puedes añadir un datepicker si quieres
+      visitedAt: null,
     };
 
     this.mapService.createSavedPlace(this.roomId(), payload).subscribe({
       next: (newPlace) => {
-        this.savedPlaces.update((prev) => [...prev, newPlace]);
-        this.addPlaceMarker(newPlace);
+        this.savedPlaces.update((prev) => {
+          const updated = [...prev, newPlace];
+          this.mapManager.renderPlaces(updated);
+          return updated;
+        });
         this.isSaving.set(false);
-        this.closeModal();
+        this.closeCreateModal();
       },
       error: (err) => {
         console.error('Error al guardar lugar', err);

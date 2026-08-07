@@ -1,0 +1,94 @@
+<app-room-header />
+
+<main class="timeline-main">
+  <!-- Línea vertical central -->
+  <div class="timeline-line"></div>
+
+  <section class="timeline-section">
+
+    @if (importantDates().length === 0) {
+      <div class="empty-state">
+        <h3>Aún no hay fechas importantes</h3>
+        <p>Añade aniversarios, primeras citas o viajes inolvidables.</p>
+      </div>
+    }
+
+    @for (date of importantDates(); track date.id) {
+      <div class="timeline-item" [class.left-side]="$even" [class.right-side]="$odd">
+
+        <!-- Nodo central (puntito) -->
+        <div class="timeline-node" [class.upcoming]="getTimeInfo(date.eventDate).label === 'Days Away'"></div>
+
+        <!-- Tarjeta de texto -->
+        <div class="timeline-card-text">
+          <div class="organic-card">
+            <h3 class="card-title">{{ date.title }}</h3>
+            <p class="card-date">{{ formatDate(date.eventDate) }}</p>
+            <div class="card-time-info">
+              <span class="time-label">{{ getTimeInfo(date.eventDate).label }}</span>
+              <span class="time-value">{{ getTimeInfo(date.eventDate).value }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta visual (Polaroid) -->
+        <div class="timeline-card-visual">
+          <div class="polaroid-frame">
+            <div class="washi-tape"></div>
+            <!-- Como no hay fotos en el DTO, ponemos un fondo de color bonito -->
+            <div class="polaroid-placeholder" [style.background]="['#e5e2dc', '#f5f1e7', '#f0eee8'][$index % 3]">
+              <span class="material-symbols-outlined polaroid-icon">{{ date.typeCode === 'first_date' ? 'favorite' : 'celebration' }}</span>
+            </div>
+            <p class="polaroid-caption">"{{ date.typeName }}"</p>
+          </div>
+        </div>
+
+      </div>
+    }
+  </section>
+</main>
+
+<!-- BOTÓN FLOTANTE (FAB) -->
+<button class="fab-btn" (click)="openModal()">
+  <span class="material-symbols-outlined">add_circle</span>
+  <span class="fab-text">Añadir Fecha</span>
+</button>
+
+<!-- MODAL CREAR FECHA -->
+@if (isModalOpen()) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Nueva Fecha Importante</h3>
+        <button class="icon-btn-sm" (click)="closeModal()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Título</label>
+          <input type="text" class="form-control" [ngModel]="newTitle()" (ngModelChange)="newTitle.set($event)" placeholder="Ej: Primer Aniversario" />
+        </div>
+        <div class="form-group">
+          <label>Fecha</label>
+          <input type="date" class="form-control" [ngModel]="newDate()" (ngModelChange)="newDate.set($event)" />
+        </div>
+        <div class="form-group">
+          <label>Tipo</label>
+          <select class="form-control" [ngModel]="newType()" (ngModelChange)="newType.set($event)">
+            <option value="anniversary">Aniversario</option>
+            <option value="first_date">Primera Cita</option>
+            <option value="trip">Viaje</option>
+            <option value="other">Otro</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outlined" (click)="closeModal()">Cancelar</button>
+        <button class="btn btn-primary" (click)="saveDate()" [disabled]="isSaving()">
+          {{ isSaving() ? 'Guardando...' : 'Guardar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
