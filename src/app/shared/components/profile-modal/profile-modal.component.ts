@@ -1,7 +1,7 @@
 import { Component, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { UiService } from '../../../services/ui.service';
+import { UiService } from '../../../services/ui/ui.service';
 import { UserService } from '../../../services/user.service';
 
 @Component({

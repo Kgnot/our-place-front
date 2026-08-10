@@ -1,0 +1,49 @@
+<app-modal [isOpen]="isOpen()" title="Nueva Fecha Importante" (closeModal)="close()">
+
+  <div class="form-group">
+    <label>Título</label>
+    <input type="text" class="form-control" [ngModel]="newTitle()" (ngModelChange)="newTitle.set($event)" placeholder="Ej: Primer Aniversario" />
+  </div>
+
+  <div class="form-group">
+    <label>Fecha</label>
+    <input type="date" class="form-control" [ngModel]="newDate()" (ngModelChange)="newDate.set($event)" />
+  </div>
+
+  <div class="form-group">
+    <label>Tipo</label>
+    <select class="form-control" [ngModel]="newType()" (ngModelChange)="newType.set($event)">
+      @for (type of dateTypes(); track type.code) {
+        <option [value]="type.code">{{ type.name }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Fotos (Opcional)</label>
+    <div class="photo-upload-area">
+      <div class="preview-grid">
+        @for (url of previewUrls(); track $index) {
+          <div class="preview-item">
+            <img [src]="url" alt="Preview" />
+            <button class="remove-photo-btn" (click)="removePhoto($index)">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+        }
+      </div>
+      <button class="upload-btn" (click)="openFilePicker()">
+        <span class="material-symbols-outlined">add_a_photo</span>
+        Añadir fotos
+      </button>
+      <input #fileInput type="file" accept="image/*" multiple (change)="onFilesSelected($event)" style="display: none;" />
+    </div>
+  </div>
+
+  <div modal-footer>
+    <button class="btn btn-outlined" (click)="close()">Cancelar</button>
+    <button class="btn btn-primary" (click)="save()" [disabled]="isSaving()">
+      {{ isSaving() ? 'Guardando...' : 'Guardar' }}
+    </button>
+  </div>
+</app-modal>

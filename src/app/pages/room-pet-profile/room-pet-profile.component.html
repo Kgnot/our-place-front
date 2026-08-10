@@ -20,9 +20,8 @@
   </div>
 
   @if (isLoading()) {
-    <div class="pet-loading">
-      <div class="spinner"></div>
-    </div>
+    <app-loader/>
+
   } @else if (notFound() || !pet()) {
     <div class="pet-not-found">
       <span class="material-symbols-outlined">pets</span>
@@ -30,13 +29,7 @@
     </div>
   } @else {
     <section class="pet-hero">
-      <div class="pet-avatar-lg">
-        @if (pet()!.avatarUrl) {
-          <img [src]="pet()!.avatarUrl" [alt]="pet()!.name" />
-        } @else {
-          <span class="material-symbols-outlined">pets</span>
-        }
-      </div>
+      <app-avatar [src]="pet()!.avatarUrl" [name]="pet()!.name" [icon]="'pets'" [size]="140"/>
       <h1>{{ pet()!.name }}</h1>
       <p class="pet-species">
         {{ pet()!.speciesName }}
@@ -81,7 +74,7 @@
 <app-modal [isOpen]="isEditOpen()" title="Editar mascota" (closeModal)="isEditOpen.set(false)">
   <div class="form-group">
     <label>Nombre</label>
-    <input type="text" class="form-control" [(ngModel)]="editForm.name" />
+    <input type="text" class="form-control" [(ngModel)]="editForm.name"/>
   </div>
   <div class="form-group">
     <label>Especie</label>
@@ -93,11 +86,11 @@
   </div>
   <div class="form-group">
     <label>Raza</label>
-    <input type="text" class="form-control" [(ngModel)]="editForm.breed" />
+    <input type="text" class="form-control" [(ngModel)]="editForm.breed"/>
   </div>
   <div class="form-group">
     <label>Fecha de nacimiento</label>
-    <input type="date" class="form-control" [(ngModel)]="editForm.birthDate" />
+    <input type="date" class="form-control" [(ngModel)]="editForm.birthDate"/>
   </div>
   <div modal-footer>
     <button class="btn btn-outlined" (click)="isEditOpen.set(false)">Cancelar</button>

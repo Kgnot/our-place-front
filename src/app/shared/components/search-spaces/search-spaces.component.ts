@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { UiService } from '../../../services/ui.service';
+import { UiService } from '../../../services/ui/ui.service';
 import { RoomService } from '../../../services/room.service';
 
 @Component({

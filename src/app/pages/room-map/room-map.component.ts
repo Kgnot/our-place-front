@@ -14,7 +14,7 @@ import { MapManagerService } from '../../services/map-manager.service'; // <-- N
 import { RoomHeaderComponent } from '../../shared/components/room-header/room-header.component';
 import { FormsModule } from '@angular/forms';
 import { PlaceCategory, SavedPlace } from '../../models/map.model';
-import { SidePanelService } from '../../services/side-panel.service';
+import { SidePanelService } from '../../services/ui/side-panel.service';
 import { MapPlaceDetailComponent } from './components/map-place-detail/map-place-detail.component';
 import { SidePanelComponent } from '../../shared/components/side-panel/side-panel.component';
 

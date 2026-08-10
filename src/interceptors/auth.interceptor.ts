@@ -15,7 +15,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const http = inject(HttpClient);
 
   // Si no estamos en el navegador (SSR), o es una petición de auth, no hacemos nada
-  if (!isPlatformBrowser(platformId) || req.url.includes('/auth/')) {
+  if (
+    !isPlatformBrowser(platformId) ||
+    req.url.includes('/auth/login') ||
+    req.url.includes('/auth/register') ||
+    req.url.includes('/auth/refresh')
+  ) {
     return next(req);
   }
 

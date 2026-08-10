@@ -5,11 +5,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PetService } from '../../services/pet.service';
 import { Pet, UpdatePetPayload } from '../../models/pet.model';
 import { ModalComponent } from '../../shared/components/modal/modal.component';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
+import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
 
 @Component({
   selector: 'app-room-pet-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, ModalComponent],
+  imports: [CommonModule, FormsModule, ModalComponent, LoaderComponent, AvatarComponent],
   templateUrl: './room-pet-profile.component.html',
   styleUrl: './room-pet-profile.component.css',
 })

@@ -1,9 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UiService } from '../../../services/ui.service';
-import { AuthService } from '../../../services/auth.service';
-import { UserService } from '../../../services/user.service';
-import {DropdownComponent} from '../dropdown/dropdown.component';
+import { UiService } from '../../../../services/ui/ui.service';
+import { AuthService } from '../../../../services/auth.service';
+import { UserService } from '../../../../services/user.service';
+import {DropdownComponent} from '../../../../shared/components/dropdown/dropdown.component';
 
 @Component({
   selector: 'app-profile-menu',

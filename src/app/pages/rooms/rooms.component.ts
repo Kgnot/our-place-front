@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { RoomService } from '../../services/room.service';
-import { HeaderComponent } from '../../shared/components/header/header.component';
+import { HeaderComponent } from './component/header/header.component';
 import { RoomCardComponent } from './component/room-card/room-card.component';
 import { CreateRoomModalComponent } from './component/create-room-modal/create-room-modal.component';
 

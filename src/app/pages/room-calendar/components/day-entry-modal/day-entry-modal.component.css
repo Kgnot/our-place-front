@@ -1,0 +1,51 @@
+.existing-entry .entry-content {
+  font-family: 'Literata', serif;
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text);
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.entry-photo {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 8px 0;
+}
+
+.text-muted {
+  color: var(--color-text-light);
+}
+
+.upload-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  padding: 12px;
+  border: 2px dashed var(--color-border);
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-text-light);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: all 0.2s;
+}
+
+.upload-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}

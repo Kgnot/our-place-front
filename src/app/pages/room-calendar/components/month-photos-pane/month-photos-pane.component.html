@@ -1,0 +1,21 @@
+<div class="photos-header">
+  <h3>Recuerdos de {{ monthLabel() }}</h3>
+  <span class="photos-count">{{ photos().length }} fotos</span>
+</div>
+
+@if (photos().length === 0) {
+  <div class="empty-photos">
+    <span class="material-symbols-outlined">photo_camera</span>
+    <p>Aún no hay fotos este mes.</p>
+  </div>
+} @else {
+  <div class="month-photos-grid">
+    @for (photo of photos(); track photo.id) {
+      <div
+        class="month-photo-card"
+        [style.background-image]="'url(\'' + photo.thumbnailUrl + '\')'"
+        (click)="photoClick.emit(photo)"
+      ></div>
+    }
+  </div>
+}

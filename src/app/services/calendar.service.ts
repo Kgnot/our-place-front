@@ -75,4 +75,8 @@ export class CalendarService {
   createImportantDate(roomId: string, payload: CreateImportantDatePayload) {
     return this.http.post<ImportantDate>(`${this.apiUrl}/${roomId}/important-dates`, payload);
   }
+  // delete
+  deleteImportantDate(roomId:string, dateId: string) {
+    return this.http.delete<void>(`${this.apiUrl}/${roomId}/important-dates/${dateId}`);
+  }
 }

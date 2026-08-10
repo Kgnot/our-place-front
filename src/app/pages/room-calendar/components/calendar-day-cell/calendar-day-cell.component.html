@@ -1,0 +1,30 @@
+<div
+  class="calendar-cell"
+  [class.has-memory]="hasMemory"
+  [class.is-today]="isToday()"
+  (click)="onClick()"
+>
+  <span class="day-number">{{ day() }}</span>
+
+  @if ((dayInfo()?.importantDates?.length ?? 0) > 0) {
+    <div class="important-date-badge" title="{{ dayInfo()?.importantDates?.[0]?.title }}">
+      <span class="material-symbols-outlined">cake</span>
+    </div>
+  } @else if (dayInfo()?.hasEntry) {
+    <div class="day-mini-preview">
+      @if (dayInfo()?.moodEmoji) {
+        <span class="mini-emoji">{{ dayInfo()?.moodEmoji }}</span>
+      } @else {
+        <span class="material-symbols-outlined mini-note-icon">description</span>
+      }
+    </div>
+  }
+
+  @if ((dayInfo()?.previewPhotos?.length ?? 0) > 0) {
+    <div class="day-photos-collection" [class.multiple]="(dayInfo()?.previewPhotos?.length ?? 0) > 1">
+      @for (photo of dayInfo()?.previewPhotos ?? []; track photo.id) {
+        <img [src]="photo.thumbnailUrl" class="day-photo-circle" alt="Memory"/>
+      }
+    </div>
+  }
+</div>

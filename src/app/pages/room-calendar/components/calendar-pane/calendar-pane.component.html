@@ -1,0 +1,38 @@
+<div class="washi-tape washi-tape-top-left"></div>
+
+<div class="calendar-header">
+  <div class="month-nav">
+    <button class="nav-btn" (click)="previousMonth.emit()">
+      <span class="material-symbols-outlined">chevron_left</span>
+    </button>
+    <h2>{{ monthLabel() }}</h2>
+    <button class="nav-btn" (click)="nextMonth.emit()">
+      <span class="material-symbols-outlined">chevron_right</span>
+    </button>
+  </div>
+  <button class="today-btn" (click)="todayClick.emit()">Today</button>
+</div>
+
+<div class="weekdays-grid">
+  @for (day of weekDays(); track day) {
+    <div class="weekday">{{ day }}</div>
+  }
+</div>
+
+<div class="calendar-grid">
+  @for (blank of blankDaysArray; track $index) {
+    <div class="calendar-cell empty"></div>
+  }
+  @for (item of days(); track item.day) {
+    <app-calendar-day-cell
+      [day]="item.day"
+      [dayInfo]="item.dayInfo"
+      [isToday]="item.isToday"
+      (dayClick)="dayClick.emit($event)"
+    />
+  }
+</div>
+
+<div class="calendar-footer">
+  <p>"Time spent together is a memory made."</p>
+</div>

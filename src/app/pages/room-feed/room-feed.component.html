@@ -12,7 +12,7 @@
         </div>
       </div>
 
-      @for (media of mediaItems(); track media.mediaId) {
+      @for (media of mediaItems(); track media.id) {
         <article class="masonry-item">
           <app-feed-media-card [media]="media" [roomId]="roomId()" (openViewer)="selectedMedia.set($event)" />
         </article>

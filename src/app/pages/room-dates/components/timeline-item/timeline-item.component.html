@@ -1,0 +1,34 @@
+<div class="timeline-item" [class.left-side]="isLeftSide()" [class.right-side]="!isLeftSide()">
+  <div class="timeline-node" [class.upcoming]="isUpcoming()"></div>
+
+  <div class="timeline-card-text">
+    <div class="organic-card">
+      <div class="card-header">
+        <h3 class="card-title">{{ date().title }}</h3>
+        <button class="icon-btn-sm danger" (click)="onDelete()" title="Eliminar fecha">
+          <span class="material-symbols-outlined">delete</span>
+        </button>
+      </div>
+      <p class="card-date">{{ formatDate(date().eventDate) }}</p>
+      <div class="card-time-info">
+        <span class="time-label">{{ getTimeInfo(date().eventDate).label }}</span>
+        <span class="time-value">{{ getTimeInfo(date().eventDate).value }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="timeline-card-visual">
+    <app-washi-card [tape]="isLeftSide() ? 'terracotta' : 'sage'" [rotate]="isLeftSide() ? -1 : 1.5">
+      @if (date().photos && date().photos.length > 0) {
+        <img [src]="date().photos[0].thumbnailUrl" class="polaroid-img" alt="Foto del recuerdo"/>
+      } @else {
+        <div class="polaroid-placeholder" [style.background]="['#e5e2dc', '#f5f1e7', '#f0eee8'][index() % 3]">
+          <span class="material-symbols-outlined polaroid-icon">
+            {{ date().typeCode === 'first_date' ? 'favorite' : 'celebration' }}
+          </span>
+        </div>
+      }
+      <p class="polaroid-caption">"{{ date().typeName }}"</p>
+    </app-washi-card>
+  </div>
+</div>
