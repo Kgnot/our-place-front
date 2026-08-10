@@ -3,12 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { environments } from '../../environments/environments';
-import { UpdateUserPayload, User } from '../models/user.model';
 import { UserService } from './user.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
@@ -18,7 +15,6 @@ export class AuthService {
   readonly isLoggedIn = signal<boolean>(false);
   readonly isLoading = signal<boolean>(false);
 
-  // Usamos environment
   private apiUrl = `${environments.apiUrl}/auth`;
 
   constructor() {
@@ -47,6 +43,7 @@ export class AuthService {
           }
           this.isLoggedIn.set(true);
           this.isLoading.set(false);
+          this.userService.loadMe();
           this.router.navigate(['/rooms']).then((r) => console.info('navegando a rooms', r));
         },
         error: (err) => {
@@ -56,12 +53,6 @@ export class AuthService {
       });
   }
 
-  /**
-   * Llama a POST /api/v1/auth/register (RegisterUserController).
-   * El endpoint devuelve RegisterUserOutput (sin tokens), así que no
-   * autenticamos automáticamente: se invoca `onSuccess` para que el
-   * componente pueda, por ejemplo, cambiar a modo login.
-   */
   register(
     email: string,
     password: string,
@@ -71,12 +62,7 @@ export class AuthService {
   ) {
     this.isLoading.set(true);
     this.http
-      .post<{ userId: string }>(`${this.apiUrl}/register`, {
-        email,
-        password,
-        firstName,
-        lastName,
-      })
+      .post<{ userId: string }>(`${this.apiUrl}/register`, { email, password, firstName, lastName })
       .subscribe({
         next: () => {
           this.isLoading.set(false);
@@ -89,11 +75,21 @@ export class AuthService {
       });
   }
 
+  refreshToken() {
+    const refreshToken = isPlatformBrowser(this.platformId)
+      ? localStorage.getItem('op_refreshToken')
+      : null;
+    if (!refreshToken) return;
+
+    return this.http.post<{ accessToken: string }>(`${this.apiUrl}/refresh`, { refreshToken });
+  }
+
   logout() {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('op_token');
       localStorage.removeItem('op_refreshToken');
     }
+    this.userService.clearUser();
     this.isLoggedIn.set(false);
     this.router.navigate(['/login']).then((r) => console.info('navegando a login', r));
   }

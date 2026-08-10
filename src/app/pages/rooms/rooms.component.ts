@@ -1,52 +1,90 @@
-import { Component, inject, afterNextRender } from '@angular/core';
+import { Component, inject, afterNextRender, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router'; // <-- Importar Router
+import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { RoomService } from '../../services/room.service';
-import { Room } from '../../models/room.model';
 import { HeaderComponent } from '../../shared/components/header/header.component';
+import { RoomCardComponent } from './component/room-card/room-card.component';
+import { CreateRoomModalComponent } from './component/create-room-modal/create-room-modal.component';
 
 @Component({
   selector: 'app-rooms',
   standalone: true,
-  imports: [CommonModule, HeaderComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    HeaderComponent,
+    RoomCardComponent,
+    CreateRoomModalComponent,
+  ],
   templateUrl: './rooms.component.html',
   styleUrl: './rooms.component.css',
 })
 export class RoomsComponent {
   private roomService = inject(RoomService);
-  private router = inject(Router); // <-- Inyectar Router
+  private router = inject(Router);
 
   rooms = this.roomService.rooms;
   isLoading = this.roomService.isLoading;
+  relationshipTypes = this.roomService.relationshipTypes;
+
+  isModalOpen = signal(false);
+  isSaving = signal(false);
 
   constructor() {
     afterNextRender(() => {
       this.roomService.loadMyRooms();
+      this.roomService.loadRelationshipTypes();
     });
   }
 
-  // para navegar al feed del room
+  // --- Navegación ---
   openRoom(roomId: string) {
     this.router.navigate(['/rooms', roomId]);
   }
 
-  getRoomColor(room: Room): string {
-    switch (room.relationshipTypeCode) {
-      case 'couple':
-        return 'var(--color-tertiary)';
-      case 'family':
-        return 'var(--color-secondary)';
-      default:
-        return 'var(--color-primary)';
+  // --- Búsqueda ---
+  onSearchInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const query = input.value;
+    if (query.trim() === '') {
+      this.roomService.loadMyRooms();
+    } else {
+      this.roomService.searchRooms(query);
     }
   }
 
-  getInitials(name: string): string {
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .substring(0, 2)
-      .toUpperCase();
+  // --- Modal Crear ---
+  openModal() {
+    this.isModalOpen.set(true);
+  }
+
+  closeModal() {
+    this.isModalOpen.set(false);
+  }
+
+  saveRoom(payload: any) {
+    this.isSaving.set(true);
+    this.roomService.createRoom(payload).subscribe({
+      next: () => {
+        this.isSaving.set(false);
+        this.closeModal();
+        this.roomService.loadMyRooms();
+      },
+      error: (err) => {
+        console.error('Error al crear room', err);
+        this.isSaving.set(false);
+      },
+    });
+  }
+
+  // --- Salir de Room ---
+  leaveRoom(roomId: string) {
+    if (confirm('¿Estás seguro de que quieres salir de este espacio?')) {
+      this.roomService.leaveRoom(roomId).subscribe({
+        next: () => this.roomService.loadMyRooms(),
+        error: (err) => console.error('Error al salir del room', err),
+      });
+    }
   }
 }

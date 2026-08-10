@@ -1,0 +1,640 @@
+{
+  "components": {
+    "schemas": {
+      "UpdatePetRequest": {
+        "type": "object",
+        "properties": {
+          "speciesCode": { "type": "string", "maxLength": 20, "minLength": 0 },
+          "name": { "type": "string", "maxLength": 100, "minLength": 0 },
+          "breed": { "type": "string", "maxLength": 100, "minLength": 0 },
+          "birthDate": { "type": "string", "format": "date" },
+          "avatarUrl": { "type": "string", "maxLength": 500, "minLength": 0 }
+        },
+        "required": ["name", "speciesCode"]
+      },
+      "PetResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "roomId": { "type": "string", "format": "uuid" },
+          "speciesCode": { "type": "string" },
+          "speciesName": { "type": "string" },
+          "name": { "type": "string" },
+          "breed": { "type": "string" },
+          "birthDate": { "type": "string", "format": "date" },
+          "avatarUrl": { "type": "string" },
+          "createdByUserId": { "type": "string", "format": "uuid" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ReactRequest": {
+        "type": "object",
+        "properties": { "reactionType": { "type": "string", "minLength": 1 } },
+        "required": ["reactionType"]
+      },
+      "CreatePetRequest": {
+        "type": "object",
+        "properties": {
+          "speciesCode": { "type": "string", "maxLength": 20, "minLength": 0 },
+          "name": { "type": "string", "maxLength": 100, "minLength": 0 },
+          "breed": { "type": "string", "maxLength": 100, "minLength": 0 },
+          "birthDate": { "type": "string", "format": "date" },
+          "avatarUrl": { "type": "string", "maxLength": 500, "minLength": 0 }
+        },
+        "required": ["name", "speciesCode"]
+      },
+      "CreateRoomRequest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "relationshipTypeCode": { "type": "string" },
+          "anniversaryDate": { "type": "string", "format": "date" },
+          "timezone": { "type": "string" }
+        },
+        "required": ["name"]
+      },
+      "RoomResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "name": { "type": "string" },
+          "statusCode": { "type": "string" },
+          "relationshipTypeCode": { "type": "string" },
+          "ownerUserId": { "type": "string", "format": "uuid" },
+          "anniversaryDate": { "type": "string", "format": "date" },
+          "timezone": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "SetRelationshipRequest": {
+        "type": "object",
+        "properties": {
+          "memberAUserId": { "type": "string", "format": "uuid" },
+          "memberBUserId": { "type": "string", "format": "uuid" },
+          "relationshipTypeCode": { "type": "string", "minLength": 1 },
+          "sinceDate": { "type": "string", "format": "date" }
+        },
+        "required": ["memberAUserId", "memberBUserId", "relationshipTypeCode"]
+      },
+      "UploadMediaRequest": {
+        "type": "object",
+        "properties": {
+          "r2Url": { "type": "string", "minLength": 1 },
+          "mediaTypeCode": { "type": "string", "minLength": 1 },
+          "mimeType": { "type": "string" },
+          "fileSizeBytes": { "type": "integer", "format": "int64" },
+          "takenAt": { "type": "string", "format": "date-time" },
+          "latitude": { "type": "number", "format": "double" },
+          "longitude": { "type": "number", "format": "double" },
+          "caption": { "type": "string" }
+        },
+        "required": ["mediaTypeCode", "r2Url"]
+      },
+      "MediaDetailResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "r2Url": { "type": "string" },
+          "thumbnailUrl": { "type": "string" },
+          "mediaTypeCode": { "type": "string" },
+          "caption": { "type": "string" },
+          "takenAt": { "type": "string", "format": "date-time" },
+          "uploadedByUserId": { "type": "string", "format": "uuid" },
+          "commentCount": { "type": "integer", "format": "int64" },
+          "reactionCount": { "type": "integer", "format": "int64" },
+          "currentUserReactionType": { "type": "string" }
+        }
+      },
+      "AddCommentRequest": {
+        "type": "object",
+        "properties": { "content": { "type": "string", "minLength": 1 } },
+        "required": ["content"]
+      },
+      "BatchUploadRequest": {
+        "type": "object",
+        "properties": {
+          "entries": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Entry" },
+            "maxItems": 50,
+            "minItems": 1
+          }
+        }
+      },
+      "Entry": {
+        "type": "object",
+        "properties": {
+          "mediaTypeCode": { "type": "string" },
+          "mimeType": { "type": "string", "minLength": 1 },
+          "fileSizeBytes": { "type": "integer", "format": "int64" },
+          "takenAt": { "type": "string", "format": "date-time" },
+          "caption": { "type": "string" }
+        },
+        "required": ["mediaTypeCode", "mimeType"]
+      },
+      "BatchUploadResponse": {
+        "type": "object",
+        "properties": {
+          "items": { "type": "array", "items": { "$ref": "#/components/schemas/UploadItem" } }
+        }
+      },
+      "UploadItem": {
+        "type": "object",
+        "properties": {
+          "mediaId": { "type": "string", "format": "uuid" },
+          "uploadUrl": { "type": "string" },
+          "r2Key": { "type": "string" }
+        }
+      },
+      "ConfirmUploadRequest": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ConfirmedItem" },
+            "maxItems": 50,
+            "minItems": 0
+          }
+        },
+        "required": ["items"]
+      },
+      "ConfirmedItem": {
+        "type": "object",
+        "properties": {
+          "mediaId": { "type": "string", "format": "uuid" },
+          "r2Key": { "type": "string" },
+          "mediaTypeCode": { "type": "string" },
+          "mimeType": { "type": "string" },
+          "fileSizeBytes": { "type": "integer", "format": "int64" },
+          "takenAt": { "type": "string", "format": "date-time" },
+          "latitude": { "type": "number", "format": "double" },
+          "longitude": { "type": "number", "format": "double" },
+          "caption": { "type": "string" }
+        },
+        "required": ["mediaId", "mediaTypeCode", "mimeType", "r2Key"]
+      },
+      "MediaSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "thumbnailUrl": { "type": "string" },
+          "mediaTypeCode": { "type": "string" },
+          "takenAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "CreateLoveNoteRequest": {
+        "type": "object",
+        "properties": {
+          "typeCode": { "type": "string", "minLength": 1 },
+          "content": { "type": "string", "minLength": 1 }
+        },
+        "required": ["content", "typeCode"]
+      },
+      "CreateLoveNoteOutput": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "typeCode": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "InviteMemberRequest": {
+        "type": "object",
+        "properties": {
+          "invitedEmail": { "type": "string", "minLength": 1 },
+          "roleCode": { "type": "string", "minLength": 1 }
+        },
+        "required": ["invitedEmail", "roleCode"]
+      },
+      "InvitationResponse": {
+        "type": "object",
+        "properties": {
+          "invitationId": { "type": "integer", "format": "int64" },
+          "token": { "type": "string" }
+        }
+      },
+      "CreateImportantDateRequest": {
+        "type": "object",
+        "properties": {
+          "typeCode": { "type": "string" },
+          "title": { "type": "string", "minLength": 1 },
+          "eventDate": { "type": "string", "format": "date" },
+          "isRecurring": { "type": "boolean" },
+          "notifyDaysBefore": { "type": "integer", "format": "int32" },
+          "media": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/MediaItem" },
+            "maxItems": 10,
+            "minItems": 0
+          }
+        },
+        "required": ["eventDate", "title", "typeCode"]
+      },
+      "MediaItem": {
+        "type": "object",
+        "properties": {
+          "r2Key": { "type": "string", "minLength": 1 },
+          "mediaTypeCode": { "type": "string", "minLength": 1 },
+          "mimeType": { "type": "string", "minLength": 1 },
+          "fileSizeBytes": { "type": "integer", "format": "int64" },
+          "takenAt": { "type": "string", "format": "date-time" },
+          "latitude": { "type": "number", "format": "double" },
+          "longitude": { "type": "number", "format": "double" },
+          "caption": { "type": "string" }
+        },
+        "required": ["mediaTypeCode", "mimeType", "r2Key"]
+      },
+      "ImportantDatePhotoResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "thumbnailUrl": { "type": "string" },
+          "mediaTypeCode": { "type": "string" },
+          "takenAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ImportantDateResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "typeCode": { "type": "string" },
+          "typeName": { "type": "string" },
+          "title": { "type": "string" },
+          "eventDate": { "type": "string", "format": "date" },
+          "isRecurring": { "type": "boolean" },
+          "notifyDaysBefore": { "type": "integer", "format": "int32" },
+          "photos": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ImportantDatePhotoResponse" }
+          }
+        }
+      },
+      "CreateDayEntryRequest": {
+        "type": "object",
+        "properties": {
+          "entryDate": { "type": "string", "format": "date" },
+          "content": { "type": "string", "maxLength": 10000, "minLength": 0 },
+          "moodEmoji": { "type": "string", "maxLength": 10, "minLength": 0 }
+        },
+        "required": ["entryDate"]
+      },
+      "CreateDayEntryOutput": {
+        "type": "object",
+        "properties": {
+          "roomId": { "type": "string", "format": "uuid" },
+          "entryDate": { "type": "string", "format": "date" }
+        }
+      },
+      "LinkMediaToDayEntryRequest": {
+        "type": "object",
+        "properties": { "mediaId": { "type": "string", "format": "uuid" } },
+        "required": ["mediaId"]
+      },
+      "LinkMediaToDayEntryOutput": {
+        "type": "object",
+        "properties": { "linked": { "type": "boolean" } }
+      },
+      "CreateSavedPlaceRequest": {
+        "type": "object",
+        "properties": {
+          "categoryCode": { "type": "string", "minLength": 1 },
+          "name": { "type": "string", "minLength": 1 },
+          "description": { "type": "string" },
+          "locationWkt": { "type": "string", "minLength": 1 },
+          "visitedAt": { "type": "string", "format": "date" }
+        },
+        "required": ["categoryCode", "locationWkt", "name"]
+      },
+      "SavedPlaceResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "roomId": { "type": "string", "format": "uuid" },
+          "createdByUserId": { "type": "string", "format": "uuid" },
+          "categoryCode": { "type": "string" },
+          "categoryName": { "type": "string" },
+          "categoryIconUrl": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "locationWkt": { "type": "string" },
+          "isAutoGenerated": { "type": "boolean" },
+          "sourceMediaId": { "type": "string", "format": "uuid" },
+          "visitedAt": { "type": "string", "format": "date" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "RecordLocationPingRequest": {
+        "type": "object",
+        "properties": {
+          "locationWkt": { "type": "string", "minLength": 1 },
+          "batteryLevel": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 0 }
+        },
+        "required": ["locationWkt"]
+      },
+      "RegisterUserRequest": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "minLength": 1 },
+          "password": { "type": "string", "maxLength": 2147483647, "minLength": 8 },
+          "firstName": { "type": "string", "minLength": 1 },
+          "lastName": { "type": "string" }
+        },
+        "required": ["email", "firstName", "password"]
+      },
+      "RegisterUserOutput": {
+        "type": "object",
+        "properties": {
+          "userId": { "type": "string", "format": "uuid" },
+          "email": { "type": "string" },
+          "status": { "type": "string" }
+        }
+      },
+      "RefreshTokenRequest": {
+        "type": "object",
+        "properties": { "refreshToken": { "type": "string", "minLength": 1 } },
+        "required": ["refreshToken"]
+      },
+      "TokenResponse": { "type": "object", "properties": { "accessToken": { "type": "string" } } },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "minLength": 1 },
+          "password": { "type": "string", "minLength": 1 }
+        },
+        "required": ["email", "password"]
+      },
+      "LoginOutput": {
+        "type": "object",
+        "properties": {
+          "userId": { "type": "string", "format": "uuid" },
+          "accessToken": { "type": "string" },
+          "refreshToken": { "type": "string" }
+        }
+      },
+      "UpdateNicknameRequest": {
+        "type": "object",
+        "properties": { "nickname": { "type": "string", "maxLength": 50, "minLength": 0 } },
+        "required": ["nickname"]
+      },
+      "UpdateCaptionRequest": {
+        "type": "object",
+        "properties": { "caption": { "type": "string" } }
+      },
+      "UpdateUserProfileRequest": {
+        "type": "object",
+        "properties": {
+          "firstName": { "type": "string" },
+          "lastName": { "type": "string" },
+          "avatarUrl": { "type": "string" },
+          "birthDate": { "type": "string", "format": "date" },
+          "timezone": { "type": "string" },
+          "locale": { "type": "string" }
+        }
+      },
+      "RoomMemberResponse": {
+        "type": "object",
+        "properties": {
+          "userLoginId": { "type": "string", "format": "uuid" },
+          "roleCode": { "type": "string" },
+          "status": { "type": "string" },
+          "nickname": { "type": "string" },
+          "joinedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "Pageable": {
+        "type": "object",
+        "properties": {
+          "page": { "type": "integer", "format": "int32", "minimum": 0 },
+          "size": { "type": "integer", "format": "int32", "minimum": 1 },
+          "sort": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+      "PageDtoMediaSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/MediaSummaryResponse" }
+          },
+          "pageNumber": { "type": "integer", "format": "int32" },
+          "pageSize": { "type": "integer", "format": "int32" },
+          "totalElements": { "type": "integer", "format": "int64" },
+          "totalPages": { "type": "integer", "format": "int32" },
+          "last": { "type": "boolean" }
+        }
+      },
+      "MediaCommentResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "userLoginId": { "type": "string", "format": "uuid" },
+          "content": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "LoveNoteResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "authorUserId": { "type": "string", "format": "uuid" },
+          "typeCode": { "type": "string" },
+          "typeName": { "type": "string" },
+          "content": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ImportantDateDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "typeCode": { "type": "string" },
+          "typeName": { "type": "string" },
+          "title": { "type": "string" },
+          "eventDate": { "type": "string", "format": "date" },
+          "isRecurring": { "type": "boolean" },
+          "photos": { "type": "array", "items": { "$ref": "#/components/schemas/MediaServiceDto" } }
+        }
+      },
+      "MediaServiceDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "thumbnailUrl": { "type": "string" },
+          "mediaTypeCode": { "type": "string" },
+          "takenAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "DayEntryDto": {
+        "type": "object",
+        "properties": {
+          "roomId": { "type": "string", "format": "uuid" },
+          "entryDate": { "type": "string", "format": "date" },
+          "createdByUserId": { "type": "string", "format": "uuid" },
+          "content": { "type": "string" },
+          "moodEmoji": { "type": "string" }
+        }
+      },
+      "CalendarDayDto": {
+        "type": "object",
+        "properties": {
+          "date": { "type": "string", "format": "date" },
+          "hasEntry": { "type": "boolean" },
+          "moodEmoji": { "type": "string" },
+          "hasPhotos": { "type": "boolean" },
+          "photoCount": { "type": "integer", "format": "int32" },
+          "previewPhotos": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/MediaSummaryDto" }
+          },
+          "importantDates": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ImportantDateInCalendarDto" }
+          }
+        }
+      },
+      "CalendarMonthDto": {
+        "type": "object",
+        "properties": {
+          "year": { "type": "integer", "format": "int32" },
+          "month": { "type": "integer", "format": "int32" },
+          "days": { "type": "array", "items": { "$ref": "#/components/schemas/CalendarDayDto" } }
+        }
+      },
+      "ImportantDateInCalendarDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "typeCode": { "type": "string" },
+          "typeName": { "type": "string" },
+          "title": { "type": "string" },
+          "isRecurring": { "type": "boolean" }
+        }
+      },
+      "MediaSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "thumbnailUrl": { "type": "string" },
+          "mediaTypeCode": { "type": "string" },
+          "takenAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "DayEntryDetailDto": {
+        "type": "object",
+        "properties": {
+          "date": { "type": "string", "format": "date" },
+          "content": { "type": "string" },
+          "moodEmoji": { "type": "string" },
+          "photos": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/MediaSummaryDto" }
+          },
+          "importantDates": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ImportantDateInCalendarDto" }
+          }
+        }
+      },
+      "UserRoomResponse": {
+        "type": "object",
+        "properties": {
+          "roomId": { "type": "string", "format": "uuid" },
+          "roomName": { "type": "string" },
+          "statusCode": { "type": "string" },
+          "relationshipTypeCode": { "type": "string" },
+          "ownerUserId": { "type": "string", "format": "uuid" },
+          "anniversaryDate": { "type": "string", "format": "date" },
+          "timezone": { "type": "string" },
+          "roomCreatedAt": { "type": "string", "format": "date-time" },
+          "roleCode": { "type": "string" },
+          "memberStatus": { "type": "string" },
+          "nickname": { "type": "string" },
+          "joinedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "LkpRoomStatus": {
+        "type": "object",
+        "properties": { "code": { "type": "string" }, "name": { "type": "string" } }
+      },
+      "LkpRelationshipType": {
+        "type": "object",
+        "properties": { "code": { "type": "string" }, "name": { "type": "string" } }
+      },
+      "LkpSpeciesDto": {
+        "type": "object",
+        "properties": { "code": { "type": "string" }, "name": { "type": "string" } }
+      },
+      "LocationPingResponse": {
+        "type": "object",
+        "properties": {
+          "userLoginId": { "type": "string", "format": "uuid" },
+          "locationWkt": { "type": "string" },
+          "batteryLevel": { "type": "integer", "format": "int32" },
+          "recordedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "PlaceCategoryResponse": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string" },
+          "name": { "type": "string" },
+          "iconUrl": { "type": "string" }
+        }
+      },
+      "LkpUserStatusDto": {
+        "type": "object",
+        "properties": { "code": { "type": "string" }, "name": { "type": "string" } }
+      },
+      "LkpRoleDto": {
+        "type": "object",
+        "properties": { "code": { "type": "string" }, "name": { "type": "string" } }
+      },
+      "LkpContactTypeDto": {
+        "type": "object",
+        "properties": { "code": { "type": "string" }, "name": { "type": "string" } }
+      },
+      "LkpProcessingStatusDto": {
+        "type": "object",
+        "properties": { "code": { "type": "string" }, "name": { "type": "string" } }
+      },
+      "LkpMediaTypeDto": {
+        "type": "object",
+        "properties": { "code": { "type": "string" }, "name": { "type": "string" } }
+      },
+      "LkpImportantDateType": {
+        "type": "object",
+        "properties": { "code": { "type": "string" }, "name": { "type": "string" } }
+      },
+      "GetMeUserDto": {
+        "type": "object",
+        "properties": {
+          "userId": { "type": "string", "format": "uuid" },
+          "email": { "type": "string" },
+          "firstName": { "type": "string" },
+          "lastName": { "type": "string" },
+          "avatarUrl": { "type": "string" },
+          "birthDate": { "type": "string", "format": "date" },
+          "timezone": { "type": "string" },
+          "locale": { "type": "string" },
+          "statusCode": { "type": "string" },
+          "mfaEnabled": { "type": "boolean" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "LkpNoteTypeDto": {
+        "type": "object",
+        "properties": { "code": { "type": "string" }, "name": { "type": "string" } }
+      },
+      "SharedItemDto": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string" },
+          "className": { "type": "string" },
+          "packageName": { "type": "string" },
+          "description": { "type": "string" }
+        }
+      }
+    }
+  }
+}

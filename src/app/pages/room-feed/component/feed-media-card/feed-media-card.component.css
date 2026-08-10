@@ -1,0 +1,27 @@
+/* Eliminamos el .comment-input y mejoramos los botones */
+.card-footer {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-light);
+  transition: color 0.2s, transform 0.15s;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 4px 0;
+}
+.action-btn:hover { color: var(--color-primary); }
+.action-btn:active { transform: scale(0.9); }
+.action-btn.liked { color: var(--color-primary); }
+.action-btn .material-symbols-outlined { font-size: 1.25rem; }

@@ -1,3 +1,4 @@
+/* Layout Principal */
 .calendar-main {
   display: flex;
   flex-direction: column;
@@ -11,6 +12,7 @@
   .calendar-main { flex-direction: row; height: calc(100vh - 80px); }
 }
 
+/* --- CALENDARIO (Lado Izquierdo) --- */
 .calendar-pane {
   flex: 1.5;
   background: var(--color-white);
@@ -90,20 +92,13 @@
 }
 .has-memory .day-number { font-weight: 700; color: var(--color-primary); }
 
-.day-content {
-  position: absolute; inset: 4px; margin-top: 12px;
-  display: flex; align-items: center; justify-content: center;
+/* Día de Hoy */
+.calendar-cell.is-today {
+  background: rgba(214, 125, 97, 0.1);
+  box-shadow: inset 0 0 0 2px var(--color-primary);
+  border-radius: 8px;
 }
-.day-thumbnail {
-  width: 80%; height: 80%; object-fit: cover;
-  border-radius: 50%; border: 2px solid white;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-.day-emoji { font-size: 18px; }
-.day-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--color-primary);
-}
+.is-today .day-number { color: var(--color-primary); font-weight: 800; }
 
 .calendar-footer {
   padding: 16px; text-align: center;
@@ -111,83 +106,77 @@
 }
 .calendar-footer p { font-family: 'Literata', serif; font-style: italic; color: var(--color-text-light); margin: 0; }
 
-/* Map Pane (en el calendario) */
-.map-pane {
+/* --- PREVIEW EN DÍAS --- */
+/* Colección de fotos (bolitas) */
+.day-photos-collection {
+  position: absolute; bottom: 6px; left: 6px;
+  display: flex; align-items: center; gap: 4px; z-index: 2;
+}
+.day-photos-collection:not(.multiple) .day-photo-circle { width: 25px; height: 25px; }
+.day-photos-collection.multiple .day-photo-circle { width: 10px; height: 10px; }
+.day-photo-circle { border-radius: 50%; object-fit: cover; border: 1.5px solid white; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+
+/* Mini preview de Nota/Emoji */
+.day-mini-preview {
+  position: absolute; top: 4px; right: 4px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(214, 125, 97, 0.15); border-radius: 4px; padding: 2px 4px; z-index: 2;
+}
+.mini-emoji { font-size: 12px; line-height: 1; }
+.mini-note-icon { font-size: 12px; color: var(--color-primary); }
+
+/* Badge para Fechas Importantes */
+.important-date-badge {
+  position: absolute; top: 4px; right: 4px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(214, 125, 97, 0.2); border-radius: 50%; width: 18px; height: 18px; z-index: 2;
+}
+.important-date-badge .material-symbols-outlined { font-size: 11px; color: var(--color-primary); font-variation-settings: 'FILL' 1; }
+
+
+/* --- FOTOS DEL MES (Lado Derecho) --- */
+.photos-pane {
   flex: 1;
-  background: #e5e2dc;
+  background: var(--color-white);
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(61, 58, 53, 0.06);
-  position: relative;
-  overflow: hidden;
-  min-height: 400px;
-}
-
-
-/* Map Pane (en el calendario) */
-.map-pane {
-  flex: 1;
-  background: #e5e2dc;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(61, 58, 53, 0.06);
-  position: relative;
-  overflow: hidden;
-  min-height: 400px;
-}
-
-.map-overlay {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  right: 16px;
+  overflow-y: auto;
+  padding: 24px;
   display: flex;
-  justify-content: space-between;
-  z-index: 10;
-  pointer-events: none;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 400px;
 }
 
-
-.map-location-badge .material-symbols-outlined { font-size: 18px; color: var(--color-primary); }
-
-.map-full-btn:hover { transform: scale(0.98); }
-
-.map-vignette {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  box-shadow: inset 0 0 40px rgba(240, 238, 232, 0.8);
-  border-radius: 16px;
+.photos-header {
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid var(--color-border); padding-bottom: 12px;
 }
+.photos-header h3 { font-family: 'Literata', serif; font-size: 20px; margin: 0; color: var(--color-text); }
+.photos-count { font-size: 12px; color: var(--color-text-light); background: var(--color-neutral); padding: 4px 8px; border-radius: 50px; }
 
-
-/* Día de Hoy */
-.calendar-cell.is-today {
-  background: rgba(214, 125, 97, 0.1); /* terracota claro */
-  box-shadow: inset 0 0 0 2px var(--color-primary);
-  border-radius: 8px;
+.empty-photos {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; flex: 1; color: var(--color-text-light);
 }
-.is-today .day-number {
-  color: var(--color-primary);
-  font-weight: 800;
+.empty-photos .material-symbols-outlined { font-size: 48px; opacity: 0.3; }
+
+.month-photos-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px;
 }
+.month-photo-card {
+  aspect-ratio: 1; background-size: cover; background-position: center;
+  border-radius: 8px; cursor: pointer; transition: transform 0.2s; border: 1px solid var(--color-border);
+}
+.month-photo-card:hover { transform: scale(1.05); z-index: 2; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
 
-/* Estilos del Modal (reutilizamos la estética) */
-.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 100; animation: fadeIn 0.2s ease; }
-.modal-card { background: var(--color-white); border-radius: 16px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.15); }
-.modal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid var(--color-border); }
-.modal-header h3 { font-family: 'Literata', serif; font-size: 22px; }
-.modal-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
-.modal-footer { padding: 16px 24px; display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid var(--color-border); }
 
-.icon-btn-sm { border: none; background: transparent; cursor: pointer; padding: 4px; border-radius: 50%; color: var(--color-text-light); }
-.icon-btn-sm:hover { background: var(--color-neutral); }
-
+/* --- CONTENIDO INYECTADO EN EL MODAL --- */
 .existing-entry .entry-content { font-family: 'Literata', serif; font-style: italic; font-size: 16px; line-height: 1.5; color: var(--color-text); }
 .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; }
 .entry-photo { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; }
-
 .divider { border: none; border-top: 1px solid var(--color-border); margin: 8px 0; }
 .text-muted { color: var(--color-text-light); }
-
 .upload-btn {
   display: flex; align-items: center; gap: 8px; justify-content: center;
   padding: 12px; border: 2px dashed var(--color-border); border-radius: 8px;
@@ -195,98 +184,3 @@
   font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.2s;
 }
 .upload-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
-
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-/* Colección de fotos en el día (estilo bolitas) */
-.day-photos-collection {
-  position: absolute;
-  bottom: 6px;
-  left: 6px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  z-index: 2;
-}
-
-/* Si es solo 1 foto, la hacemos un poco más grande para que se note */
-.day-photos-collection:not(.multiple) .day-photo-circle {
-  width: 25px;
-  height: 25px;
-}
-
-/* Si hay varias, las hacemos pequeñitas como puntos */
-.day-photos-collection.multiple .day-photo-circle {
-  width: 10px;
-  height: 10px;
-}
-
-.day-photo-circle {
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1.5px solid white;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-}
-
-/* Arreglar el mapa dentro del calendario */
-.map-pane {
-  flex: 1;
-  background: #e5e2dc;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(61, 58, 53, 0.06);
-  position: relative;
-  overflow: hidden;
-  min-height: 400px;
-  display: flex; /* Aseguramos que el mapa llene el espacio */
-}
-
-.map-pane app-map-view {
-  display: block;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  inset: 0;
-}
-
-/* Mini preview de Nota/Emoji arriba a la derecha */
-.day-mini-preview {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(214, 125, 97, 0.15);
-  border-radius: 4px;
-  padding: 2px 4px;
-  z-index: 2;
-}
-.mini-emoji {
-  font-size: 12px;
-  line-height: 1;
-}
-.mini-note-icon {
-  font-size: 12px;
-  color: var(--color-primary);
-}
-
-/* Badge para Fechas Importantes */
-.important-date-badge {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(214, 125, 97, 0.2); /* Terracota suave */
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  z-index: 2;
-}
-
-.important-date-badge .material-symbols-outlined {
-  font-size: 11px;
-  color: var(--color-primary);
-  font-variation-settings: 'FILL' 1;
-}

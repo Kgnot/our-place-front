@@ -1,0 +1,21 @@
+<div class="note-card" [style.background-color]="config().bgColor">
+  <div class="note-tape" [class.tape-pink]="config().tapeColor === 'pink'"
+       [class.tape-green]="config().tapeColor === 'green'"
+       [class.tape-mustard]="config().tapeColor === 'mustard'"
+       [class.tape-terracotta]="config().tapeColor === 'terracotta'">
+  </div>
+
+  <div class="note-header">
+    <span class="material-symbols-outlined">{{ config().icon }}</span>
+    <small>{{ config().label }}</small>
+  </div>
+
+  <p class="note-content">"{{ note().content }}"</p>
+
+  <div class="note-footer">
+    <button class="like-btn" disabled title="Pronto podrás reaccionar a las notas">
+      <span class="material-symbols-outlined">favorite_border</span>
+    </button>
+    <input type="text" class="comment-input" placeholder="Add comment..." />
+  </div>
+</div>

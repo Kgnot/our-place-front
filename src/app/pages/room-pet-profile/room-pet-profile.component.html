@@ -1,0 +1,64 @@
+<div class="noise-overlay"></div>
+
+<main class="pet-profile-main">
+  <button class="back-btn" (click)="goBack()">
+    <span class="material-symbols-outlined">arrow_back</span>
+    Volver al feed
+  </button>
+
+  @if (isLoading()) {
+    <div class="pet-loading">
+      <div class="spinner"></div>
+    </div>
+  } @else if (notFound() || !pet()) {
+    <div class="pet-not-found">
+      <span class="material-symbols-outlined">pets</span>
+      <p>No pudimos encontrar esta mascota.</p>
+    </div>
+  } @else {
+    <section class="pet-hero">
+      <div class="pet-avatar-lg">
+        @if (pet()!.avatarUrl) {
+          <img [src]="pet()!.avatarUrl" [alt]="pet()!.name" />
+        } @else {
+          <span class="material-symbols-outlined">pets</span>
+        }
+      </div>
+      <h1>{{ pet()!.name }}</h1>
+      <p class="pet-species">
+        {{ pet()!.speciesName }}
+        @if (pet()!.breed) {
+          <span class="dot">·</span> {{ pet()!.breed }}
+        }
+      </p>
+    </section>
+
+    <section class="pet-details-grid">
+      <div class="pet-detail-card">
+        <span class="material-symbols-outlined">cake</span>
+        <div>
+          <span class="detail-label">Cumpleaños</span>
+          <span class="detail-value">{{ formatDate(pet()!.birthDate) }}</span>
+        </div>
+      </div>
+
+      @if (age) {
+        <div class="pet-detail-card">
+          <span class="material-symbols-outlined">schedule</span>
+          <div>
+            <span class="detail-label">Edad</span>
+            <span class="detail-value">{{ age }}</span>
+          </div>
+        </div>
+      }
+
+      <div class="pet-detail-card">
+        <span class="material-symbols-outlined">favorite</span>
+        <div>
+          <span class="detail-label">En la familia desde</span>
+          <span class="detail-value">{{ formatDate(pet()!.createdAt) }}</span>
+        </div>
+      </div>
+    </section>
+  }
+</main>

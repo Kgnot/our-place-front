@@ -1,0 +1,1623 @@
+{
+  "openapi": "3.1.0",
+  "info": { "title": "OpenAPI definition", "version": "v0" },
+  "servers": [{ "url": "http://localhost:8080", "description": "Generated server url" }],
+  "paths": {
+    "/pets/{petId}": {
+      "get": {
+        "tags": ["pet-controller"],
+        "operationId": "findById",
+        "parameters": [
+          {
+            "name": "petId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/PetResponse" } } }
+          }
+        }
+      },
+      "put": {
+        "tags": ["pet-controller"],
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "petId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/UpdatePetRequest" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/PetResponse" } } }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["pet-controller"],
+        "operationId": "delete",
+        "parameters": [
+          {
+            "name": "petId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/api/v1/rooms/{roomId}/media/{mediaId}/reactions/me": {
+      "put": {
+        "tags": ["media-reaction-controller"],
+        "operationId": "react",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "mediaId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/ReactRequest" } }
+          },
+          "required": true
+        },
+        "responses": { "200": { "description": "OK" } }
+      },
+      "delete": {
+        "tags": ["media-reaction-controller"],
+        "operationId": "removeReaction",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "mediaId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/rooms/{roomId}/pets": {
+      "get": {
+        "tags": ["pet-controller"],
+        "operationId": "findAllByRoom",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/PetResponse" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["pet-controller"],
+        "operationId": "create",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/CreatePetRequest" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/PetResponse" } } }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms": {
+      "post": {
+        "tags": ["room-controller"],
+        "operationId": "createRoom",
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/CreateRoomRequest" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/RoomResponse" } } }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{roomId}/relationships": {
+      "post": {
+        "tags": ["room-controller"],
+        "operationId": "setRelationship",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SetRelationshipRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/api/v1/rooms/{roomId}/media": {
+      "get": {
+        "tags": ["media-query-controller"],
+        "operationId": "listMedia",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": { "$ref": "#/components/schemas/Pageable" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/PageDtoMediaSummaryResponse" } }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["media-upload-controller"],
+        "operationId": "uploadMedia",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/UploadMediaRequest" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/MediaDetailResponse" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{roomId}/media/{mediaId}/comments": {
+      "get": {
+        "tags": ["media-comment-controller"],
+        "operationId": "listComments",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "mediaId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/MediaCommentResponse" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["media-comment-controller"],
+        "operationId": "addComment",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "mediaId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/AddCommentRequest" } }
+          },
+          "required": true
+        },
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/api/v1/rooms/{roomId}/media/presign": {
+      "post": {
+        "tags": ["media-upload-controller"],
+        "operationId": "presignUpload",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/BatchUploadRequest" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/BatchUploadResponse" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{roomId}/media/confirm": {
+      "post": {
+        "tags": ["media-upload-controller"],
+        "operationId": "confirmUpload",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ConfirmUploadRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/MediaSummaryResponse" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{roomId}/love-notes": {
+      "get": {
+        "tags": ["love-note-controller"],
+        "operationId": "list",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/LoveNoteResponse" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["love-note-controller"],
+        "operationId": "create_1",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateLoveNoteRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/CreateLoveNoteOutput" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{roomId}/invitations": {
+      "post": {
+        "tags": ["room-controller"],
+        "operationId": "inviteMember",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/InviteMemberRequest" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/InvitationResponse" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{roomId}/important-dates": {
+      "get": {
+        "tags": ["important-date-controller"],
+        "operationId": "list_1",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/ImportantDateDto" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["important-date-controller"],
+        "operationId": "create_2",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateImportantDateRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ImportantDateResponse" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{roomId}/day-entries": {
+      "get": {
+        "tags": ["day-entry-controller"],
+        "operationId": "list_2",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/DayEntryDto" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["day-entry-controller"],
+        "operationId": "create_3",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateDayEntryRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/CreateDayEntryOutput" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{roomId}/day-entries/{entryDate}/media": {
+      "post": {
+        "tags": ["day-entry-media-controller"],
+        "operationId": "link",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "entryDate",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "date" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LinkMediaToDayEntryRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/LinkMediaToDayEntryOutput" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/invitations/{token}/accept": {
+      "post": {
+        "tags": ["room-controller"],
+        "operationId": "acceptInvitation",
+        "parameters": [
+          { "name": "token", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/RoomResponse" } } }
+          }
+        }
+      }
+    },
+    "/api/v1/map/room/{roomId}/saved-places": {
+      "get": {
+        "tags": ["saved-place-controller"],
+        "operationId": "list_3",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/SavedPlaceResponse" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["saved-place-controller"],
+        "operationId": "create_4",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateSavedPlaceRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/SavedPlaceResponse" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/map/room/{roomId}/location-pings": {
+      "post": {
+        "tags": ["location-ping-controller"],
+        "operationId": "record",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RecordLocationPingRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/api/v1/auth/register": {
+      "post": {
+        "tags": ["register-user-controller"],
+        "operationId": "register",
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/RegisterUserRequest" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/RegisterUserOutput" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/refresh": {
+      "post": {
+        "tags": ["auth-controller"],
+        "operationId": "refreshToken",
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/RefreshTokenRequest" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/TokenResponse" } } }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "tags": ["login-controller"],
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/LoginRequest" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/LoginOutput" } } }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{roomId}/members/me/nickname": {
+      "patch": {
+        "tags": ["room-controller"],
+        "operationId": "updateNickname",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateNicknameRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/api/v1/rooms/{roomId}/media/{mediaId}/caption": {
+      "patch": {
+        "tags": ["media-controller"],
+        "operationId": "updateCaption",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "mediaId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateCaptionRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/api/v1/auth/me": {
+      "get": {
+        "tags": ["current-user-controller"],
+        "operationId": "getMe",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/GetMeUserDto" } } }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["current-user-controller"],
+        "operationId": "updateProfile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateUserProfileRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } }
+        }
+      }
+    },
+    "/api/v1/rooms/{roomId}": {
+      "get": {
+        "tags": ["room-controller"],
+        "operationId": "getRoom",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/RoomResponse" } } }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{roomId}/members": {
+      "get": {
+        "tags": ["room-controller"],
+        "operationId": "listMembers",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/RoomMemberResponse" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{roomId}/media/{mediaId}": {
+      "get": {
+        "tags": ["media-query-controller"],
+        "operationId": "getMedia",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "mediaId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/MediaDetailResponse" } }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["media-controller"],
+        "operationId": "deleteMedia",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "mediaId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/api/v1/rooms/{roomId}/media/this-week": {
+      "get": {
+        "tags": ["media-query-controller"],
+        "operationId": "listThisWeek",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "referenceDate",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "format": "date" }
+          },
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": { "$ref": "#/components/schemas/Pageable" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/PageDtoMediaSummaryResponse" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{roomId}/media/this-month": {
+      "get": {
+        "tags": ["media-query-controller"],
+        "operationId": "listThisMonth",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int32" }
+          },
+          {
+            "name": "month",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int32" }
+          },
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": { "$ref": "#/components/schemas/Pageable" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/PageDtoMediaSummaryResponse" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{roomId}/media/latest": {
+      "get": {
+        "tags": ["media-query-controller"],
+        "operationId": "listLatest",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": { "$ref": "#/components/schemas/Pageable" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/PageDtoMediaSummaryResponse" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{roomId}/media/by-date": {
+      "get": {
+        "tags": ["media-query-controller"],
+        "operationId": "listByDateRange",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "format": "date" }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "format": "date" }
+          },
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": { "$ref": "#/components/schemas/Pageable" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/PageDtoMediaSummaryResponse" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{roomId}/calendar": {
+      "get": {
+        "tags": ["calendar-controller"],
+        "operationId": "getMonth",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int32" }
+          },
+          {
+            "name": "month",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int32" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/CalendarMonthDto" } } }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{roomId}/calendar/{date}": {
+      "get": {
+        "tags": ["calendar-controller"],
+        "operationId": "getDayDetail",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "date",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "date" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/DayEntryDetailDto" } } }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/mine": {
+      "get": {
+        "tags": ["room-controller"],
+        "operationId": "listMyRooms",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/UserRoomResponse" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/mine/search": {
+      "get": {
+        "tags": ["room-controller"],
+        "operationId": "searchMyRooms",
+        "parameters": [
+          { "name": "q", "in": "query", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/UserRoomResponse" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/room/room-statuses": {
+      "get": {
+        "tags": ["lkp-room-controller"],
+        "operationId": "getRoomStatuses",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/LkpRoomStatus" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/room/relationship-types": {
+      "get": {
+        "tags": ["lkp-room-controller"],
+        "operationId": "getRelationshipTypes",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/LkpRelationshipType" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/pet/species": {
+      "get": {
+        "tags": ["lkp-species-controller"],
+        "operationId": "findAll",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/LkpSpeciesDto" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/pet/species/{code}": {
+      "get": {
+        "tags": ["lkp-species-controller"],
+        "operationId": "findByCode",
+        "parameters": [
+          { "name": "code", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/LkpSpeciesDto" } } }
+          }
+        }
+      }
+    },
+    "/api/v1/map/room/{roomId}/saved-places/{savedPlaceId}": {
+      "get": {
+        "tags": ["saved-place-controller"],
+        "operationId": "get",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "savedPlaceId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/SavedPlaceResponse" } }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["saved-place-controller"],
+        "operationId": "delete_1",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "savedPlaceId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/api/v1/map/room/{roomId}/location-pings/latest": {
+      "get": {
+        "tags": ["location-ping-controller"],
+        "operationId": "latestPerUser",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/LocationPingResponse" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/map/place-categories": {
+      "get": {
+        "tags": ["place-category-controller"],
+        "operationId": "list_4",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/PlaceCategoryResponse" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/identity/lkp/user-statuses": {
+      "get": {
+        "tags": ["lkp-user-status-controller"],
+        "operationId": "findAll_1",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/LkpUserStatusDto" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/identity/lkp/user-statuses/{code}": {
+      "get": {
+        "tags": ["lkp-user-status-controller"],
+        "operationId": "findByCode_1",
+        "parameters": [
+          { "name": "code", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/LkpUserStatusDto" } } }
+          }
+        }
+      }
+    },
+    "/api/v1/identity/lkp/roles": {
+      "get": {
+        "tags": ["lkp-role-controller"],
+        "operationId": "findAll_2",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/LkpRoleDto" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/identity/lkp/roles/{code}": {
+      "get": {
+        "tags": ["lkp-role-controller"],
+        "operationId": "findByCode_2",
+        "parameters": [
+          { "name": "code", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/LkpRoleDto" } } }
+          }
+        }
+      }
+    },
+    "/api/v1/identity/lkp/contact-types": {
+      "get": {
+        "tags": ["lkp-contact-type-controller"],
+        "operationId": "findAll_3",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/LkpContactTypeDto" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/identity/lkp/contact-types/{code}": {
+      "get": {
+        "tags": ["lkp-contact-type-controller"],
+        "operationId": "findByCode_3",
+        "parameters": [
+          { "name": "code", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/LkpContactTypeDto" } } }
+          }
+        }
+      }
+    },
+    "/api/v1/gallery/processing-statuses": {
+      "get": {
+        "tags": ["lkp-processing-status-controller"],
+        "operationId": "findAll_4",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/LkpProcessingStatusDto" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/gallery/processing-statuses/{code}": {
+      "get": {
+        "tags": ["lkp-processing-status-controller"],
+        "operationId": "findByCode_4",
+        "parameters": [
+          { "name": "code", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/LkpProcessingStatusDto" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/gallery/media-types": {
+      "get": {
+        "tags": ["lkp-media-type-controller"],
+        "operationId": "findAll_5",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/LkpMediaTypeDto" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/gallery/media-types/{code}": {
+      "get": {
+        "tags": ["lkp-media-type-controller"],
+        "operationId": "findByCode_5",
+        "parameters": [
+          { "name": "code", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/LkpMediaTypeDto" } } }
+          }
+        }
+      }
+    },
+    "/api/v1/calendar/important-dates/lkp": {
+      "get": {
+        "tags": ["lkp-calendar-controller"],
+        "operationId": "listLkp",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/LkpImportantDateType" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/affection/note-types": {
+      "get": {
+        "tags": ["lkp-note-type-controller"],
+        "operationId": "findAll_6",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/LkpNoteTypeDto" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/affection/note-types/{code}": {
+      "get": {
+        "tags": ["lkp-note-type-controller"],
+        "operationId": "findByCode_6",
+        "parameters": [
+          { "name": "code", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/LkpNoteTypeDto" } } }
+          }
+        }
+      }
+    },
+    "/api/admin/architecture/shared": {
+      "get": {
+        "tags": ["architecture-controller"],
+        "operationId": "getSharedItems",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": { "$ref": "#/components/schemas/SharedItemDto" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{roomId}/members/me": {
+      "delete": {
+        "tags": ["room-controller"],
+        "operationId": "leaveRoom",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/api/v1/rooms/{roomId}/media/{mediaId}/comments/{commentId}": {
+      "delete": {
+        "tags": ["media-comment-controller"],
+        "operationId": "deleteComment",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "mediaId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": { "200": { "description": "OK" } }
+      }
+    }
+  }
+}

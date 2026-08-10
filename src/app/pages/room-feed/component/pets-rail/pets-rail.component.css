@@ -1,0 +1,97 @@
+/* Aumenté el ancho de 6rem a 8.5rem para que respire */
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  position: sticky;
+  top: 5.625rem;
+  padding: 6.25rem 1rem 2.5rem 0;
+  width: 8.5rem;
+  box-sizing: border-box;
+}
+
+.pet-avatar {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+.pet-avatar img,
+.pet-avatar .material-symbols-outlined {
+  width: 4.5rem; /* Antes 3.5rem */
+  height: 4.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--color-white);
+  box-shadow: var(--shadow-md);
+  transition: transform 0.2s;
+}
+.pet-avatar .material-symbols-outlined {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-neutral);
+  color: var(--color-primary);
+  font-size: 2rem;
+}
+.pet-avatar:hover img,
+.pet-avatar:hover .material-symbols-outlined {
+  transform: scale(1.05);
+}
+.pet-avatar .pet-name {
+  font-size: 0.85rem; /* Antes 0.75rem */
+  font-weight: 600;
+  color: var(--color-text);
+  text-align: center;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pet-avatar-add .material-symbols-outlined {
+  background: transparent;
+  border: 2px dashed var(--color-border);
+  color: var(--color-text-light);
+}
+.pet-avatar-add:hover .material-symbols-outlined {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.pet-empty-card {
+  min-height: 12rem;
+  width: 100%;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  background: transparent;
+  transition: background 0.3s;
+}
+.pet-empty-card:hover { background: var(--color-neutral); }
+.pet-empty-card .add-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.pet-empty-card h3 { font-size: 0.95rem; margin-bottom: 0.25rem; }
+.pet-empty-card p { font-size: 0.75rem; color: var(--color-text-light); }

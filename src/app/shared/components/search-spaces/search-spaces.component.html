@@ -7,14 +7,26 @@
           type="text"
           placeholder="Buscar espacios..."
           [ngModel]="searchTerm()"
-          (ngModelChange)="searchTerm.set($event)"
+          (ngModelChange)="onSearch($event)"
           autofocus />
         <button class="esc-btn" (click)="close()">ESC</button>
       </div>
 
-      <!-- Resultados irían aquí -->
       <div class="search-results">
-        <p class="hint">Busca entre tus rooms y recuerdos.</p>
+        @if (rooms().length === 0 && searchTerm() !== '') {
+          <p class="hint">No se encontraron espacios para "{{ searchTerm() }}".</p>
+        } @else {
+          @for (room of rooms(); track room.roomId) {
+            <div class="search-result-item" (click)="openRoom(room.roomId)">
+              <span class="material-symbols-outlined">folder_shared</span>
+              <div class="result-info">
+                <p class="result-name">{{ room.roomName }}</p>
+                <p class="result-type">{{ room.relationshipTypeCode }}</p>
+              </div>
+              <span class="material-symbols-outlined arrow">arrow_forward</span>
+            </div>
+          }
+        }
       </div>
     </div>
   </div>

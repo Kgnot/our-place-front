@@ -1,0 +1,29 @@
+<app-modal [isOpen]="isOpen()" title="Escribir un recuerdo" (closeModal)="close()">
+
+  @if (noteTypes().length > 0) {
+    <div class="form-group">
+      <label>Tipo de nota</label>
+      <select class="form-control" [ngModel]="selectedType()" (ngModelChange)="selectedType.set($event)">
+        @for (type of noteTypes(); track type.code) {
+          <option [value]="type.code">{{ type.name }}</option>
+        }
+      </select>
+    </div>
+  }
+
+  <div class="form-group">
+    <label>Tu mensaje</label>
+    <textarea
+      class="form-control note-textarea"
+      rows="5"
+      [ngModel]="content()"
+      (ngModelChange)="content.set($event)"
+      placeholder="Escribe tu nota de amor..."
+    ></textarea>
+  </div>
+
+  <div modal-footer>
+    <button class="btn btn-outlined" (click)="close()" [disabled]="isSaving()">Cancelar</button>
+    <button class="btn btn-primary" (click)="save()" [disabled]="isSaving() || !content().trim()">Guardar</button>
+  </div>
+</app-modal>

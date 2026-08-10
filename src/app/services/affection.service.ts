@@ -3,16 +3,28 @@ import { HttpClient } from '@angular/common/http';
 import { LoveNote, CreateLoveNotePayload } from '../models/love-note.model';
 import { environments } from '../../environments/environments';
 
-@Injectable({
-  providedIn: 'root',
-})
+// Modelo nuevo basado en tu backend record
+export interface LkpNoteType {
+  code: string;
+  name: string;
+}
+
+@Injectable({ providedIn: 'root' })
 export class AffectionService {
   private http = inject(HttpClient);
   private apiUrl = `${environments.apiUrl}/rooms`;
+  private lkpApiUrl = `${environments.apiUrl}/affection/note-types`;
 
-  // Signal para guardar las notas del room actual
   readonly notes = signal<LoveNote[]>([]);
   readonly isLoading = signal<boolean>(false);
+  readonly noteTypes = signal<LkpNoteType[]>([]); // <-- NUEVO SIGNAL
+
+  loadNoteTypes() {
+    this.http.get<LkpNoteType[]>(this.lkpApiUrl).subscribe({
+      next: (data) => this.noteTypes.set(data),
+      error: (err) => console.error('Error al obtener tipos de nota', err),
+    });
+  }
 
   loadNotes(roomId: string) {
     this.isLoading.set(true);

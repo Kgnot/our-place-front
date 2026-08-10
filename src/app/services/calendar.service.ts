@@ -2,7 +2,11 @@ import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environments } from '../../environments/environments';
 import { CalendarMonth, DayEntryDetail } from '../models/calendar.model';
-import { CreateImportantDatePayload, ImportantDate } from '../models/important-date.model';
+import {
+  CreateImportantDatePayload,
+  ImportantDate,
+  LkpImportantDateType,
+} from '../models/important-date.model';
 
 @Injectable({
   providedIn: 'root',
@@ -10,11 +14,20 @@ import { CreateImportantDatePayload, ImportantDate } from '../models/important-d
 export class CalendarService {
   private http = inject(HttpClient);
   private apiUrl = `${environments.apiUrl}/rooms`;
+  private lkpApiUrl = `${environments.apiUrl}/calendar`;
 
   readonly importantDates = signal<ImportantDate[]>([]);
   readonly currentMonth = signal<CalendarMonth | null>(null);
   readonly selectedDayDetail = signal<DayEntryDetail | null>(null);
   readonly isLoading = signal(false);
+  readonly dateTypes = signal<LkpImportantDateType[]>([]);
+
+  loadDateTypes() {
+    this.http.get<LkpImportantDateType[]>(`${this.lkpApiUrl}/important-dates/lkp`).subscribe({
+      next: (data) => this.dateTypes.set(data),
+      error: (err) => console.error('Error al obtener tipos de fecha', err),
+    });
+  }
 
   loadMonth(roomId: string, year: number, month: number) {
     this.isLoading.set(true);

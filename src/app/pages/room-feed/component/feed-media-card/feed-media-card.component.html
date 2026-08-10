@@ -1,0 +1,32 @@
+<app-washi-card
+  tape="green"
+  [rotate]="1"
+  style="--washi-card-radius: 4px; --washi-card-padding: 8px 8px 16px; --washi-card-shadow: 0 8px 30px rgba(61,58,53,0.06);"
+>
+  <div class="photo-wrapper" (click)="openViewer.emit(media())">
+    @if (media().thumbnailUrl) {
+      <img [src]="media().thumbnailUrl" class="feed-photo" alt="Recuerdo" />
+    } @else {
+      <div class="photo-placeholder loading-shimmer">
+        <span class="material-symbols-outlined photo-icon">hourglass_top</span>
+      </div>
+    }
+  </div>
+
+  <p class="handwritten-comment">{{ media().caption || 'Un nuevo recuerdo' }}</p>
+
+  <!-- NUEVO FOOTER LIMPIO -->
+  <div class="card-footer">
+    <button class="action-btn" [class.liked]="isLiked()" (click)="toggleLike($event)">
+      <span class="material-symbols-outlined">
+        {{ isLiked() ? 'favorite' : 'favorite_border' }}
+      </span>
+      <span class="action-count">{{ media().reactionCount || 0 }}</span>
+    </button>
+
+    <button class="action-btn" (click)="openViewer.emit(media())">
+      <span class="material-symbols-outlined">chat_bubble_outline</span>
+      <span class="action-count">{{ media().commentCount || 0 }}</span>
+    </button>
+  </div>
+</app-washi-card>

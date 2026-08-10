@@ -1,6 +1,5 @@
 <div class="noise-overlay"></div>
 
-<!-- Usamos el header compartido -->
 <app-header />
 
 <main class="op-main">
@@ -13,29 +12,18 @@
     <div class="loading-state">
       <p>Cargando tus espacios...</p>
     </div>
-  } @else if (rooms().length === 0) {
-    <div class="empty-state">
-      <p>Aún no tienes espacios.</p>
-    </div>
   } @else {
     <div class="rooms-grid">
       @for (room of rooms(); track room.roomId) {
-        <div class="room-card group" (click)="openRoom(room.roomId)">
-          <div class="washi-tape" [class.pink]="room.relationshipTypeCode === 'couple'"
-               [class.green]="room.relationshipTypeCode === 'family'"></div>
-          <div class="card-inner">
-            <div class="card-cover" [style.background-color]="getRoomColor(room)">
-              <span class="cover-initials">{{ getInitials(room.roomName) }}</span>
-            </div>
-            <div class="card-content">
-              <h3>{{ room.roomName }}</h3>
-              <p class="room-tag">{{ room.relationshipTypeCode }}</p>
-            </div>
-          </div>
-        </div>
+        <app-room-card
+          [room]="room"
+          (openRoom)="openRoom($event)"
+          (leaveRoom)="leaveRoom($event)"
+        />
       }
 
-      <div class="create-card">
+      <!-- TARJETA CREAR (SIEMPRE VISIBLE) -->
+      <div class="create-card" (click)="openModal()">
         <div class="create-inner">
           <div class="create-icon">
             <span class="material-symbols-outlined">add</span>
@@ -47,3 +35,11 @@
     </div>
   }
 </main>
+
+<app-create-room-modal
+  [isOpen]="isModalOpen()"
+  [relationshipTypes]="relationshipTypes()"
+  [isSaving]="isSaving()"
+  (saveRoom)="saveRoom($event)"
+  (closeModal)="closeModal()"
+/>

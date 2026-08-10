@@ -1,18 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import {
-  PhotoCardComponent,
-  TapeColor,
-} from '../../shared/components/photo-card/photo-card.component';
-
-interface MemoryPhoto {
-  url: string;
-  alt: string;
-  tape: TapeColor;
-  rotate: number;
-}
+import { PhotoCardComponent } from '../../shared/components/photo-card/photo-card.component';
+import { MEMORY_PHOTOS } from './config/login.config';
 
 @Component({
   selector: 'app-login',
@@ -29,17 +20,10 @@ export class LoginComponent {
   lastName = signal('');
   isLoginMode = signal(true);
 
-  // Reemplaza estas rutas por tus propias imágenes en /assets/login/
-  protected readonly memoryPhotos: MemoryPhoto[] = [
-    {
-      url: 'assets/login/memory-1.jpg',
-      alt: 'Recuerdo compartido 1',
-      tape: 'terracotta',
-      rotate: -6,
-    },
-    { url: 'assets/login/memory-2.jpg', alt: 'Recuerdo compartido 2', tape: 'sage', rotate: 4 },
-    { url: 'assets/login/memory-3.jpg', alt: 'Recuerdo compartido 3', tape: 'mustard', rotate: -3 },
-  ];
+  // Computamos leyendo del mapa directamente
+  protected readonly memoryPhotos = computed(() =>
+    this.isLoginMode() ? MEMORY_PHOTOS.login : MEMORY_PHOTOS.register,
+  );
 
   toggleMode() {
     this.isLoginMode.update((value) => !value);
@@ -50,7 +34,6 @@ export class LoginComponent {
       this.auth.login(this.email(), this.password());
     } else {
       this.auth.register(this.email(), this.password(), this.firstName(), this.lastName(), () => {
-        // Tras registrarse, lo mandamos a iniciar sesión con el correo ya cargado
         this.isLoginMode.set(true);
       });
     }

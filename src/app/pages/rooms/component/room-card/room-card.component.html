@@ -1,0 +1,26 @@
+<div class="room-card group" (click)="onOpen()">
+  <div class="washi-tape" [class.pink]="room().relationshipTypeCode === 'couple'"
+       [class.green]="room().relationshipTypeCode === 'family'"></div>
+  <div class="card-inner">
+
+    <!-- Botón de salir visible en hover -->
+    @if (room().ownerUserId !== currentUserId()) {
+      <button class="leave-btn" (click)="onLeave($event)" title="Salir del espacio">
+        <span class="material-symbols-outlined">logout</span>
+      </button>
+    } @else {
+      <!-- Si eres el dueño, tal vez mostrar ajustes o no mostrar nada -->
+      <button class="leave-btn" (click)="onLeave($event)" title="Eliminar / Salir">
+        <span class="material-symbols-outlined">delete</span>
+      </button>
+    }
+
+    <div class="card-cover" [style.background-color]="getRoomColor()">
+      <span class="cover-initials">{{ getInitials() }}</span>
+    </div>
+    <div class="card-content">
+      <h3>{{ room().roomName }}</h3>
+      <p class="room-tag">{{ room().relationshipTypeCode }}</p>
+    </div>
+  </div>
+</div>

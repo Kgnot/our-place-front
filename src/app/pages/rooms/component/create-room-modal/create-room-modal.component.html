@@ -1,0 +1,28 @@
+<app-modal [isOpen]="isOpen()" title="Crear nuevo espacio" (closeModal)="closeModal.emit()">
+
+  <div class="form-group">
+    <label>Nombre del espacio</label>
+    <input type="text" class="form-control" [ngModel]="newName()" (ngModelChange)="newName.set($event)" placeholder="Ej: Alex & Sam" />
+  </div>
+
+  <div class="form-group">
+    <label>Tipo de relación</label>
+    <select class="form-control" [ngModel]="newType()" (ngModelChange)="newType.set($event)">
+      @for (type of relationshipTypes(); track type.code) {
+        <option [value]="type.code">{{ type.name }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Aniversario o fecha especial (Opcional)</label>
+    <input type="date" class="form-control" [ngModel]="newDate()" (ngModelChange)="newDate.set($event)" />
+  </div>
+
+  <div modal-footer>
+    <button class="btn btn-outlined" (click)="closeModal.emit()">Cancelar</button>
+    <button class="btn btn-primary" (click)="onSave()" [disabled]="isSaving()">
+      {{ isSaving() ? 'Creando...' : 'Crear Espacio' }}
+    </button>
+  </div>
+</app-modal>

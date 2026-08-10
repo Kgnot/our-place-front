@@ -18,7 +18,14 @@ export interface SavedPlace {
 export interface CreateSavedPlacePayload {
   categoryCode: string;
   name: string;
-  description: string;
+  description?: string;
   locationWkt: string;
-  visitedAt: string | null;
+  visitedAt?: string | null;
+}
+
+export interface LocationPing {
+  userLoginId: string;
+  locationWkt: string;
+  batteryLevel: number;
+  recordedAt: string;
 }

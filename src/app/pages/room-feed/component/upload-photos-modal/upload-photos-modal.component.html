@@ -1,0 +1,31 @@
+<app-modal [isOpen]="isOpen()" title="Subir recuerdos" (closeModal)="close()">
+
+  @if (!isUploading()) {
+    <div class="form-group">
+      <label>Selecciona las fotos</label>
+      <input type="file" accept="image/*" multiple (change)="onFilesSelected($event)" class="form-control" />
+    </div>
+
+    @if (previewUrls().length > 0) {
+      <div class="preview-grid">
+        @for (url of previewUrls(); track $index) {
+          <div class="preview-item">
+            <img [src]="url" alt="Preview" />
+          </div>
+        }
+      </div>
+    }
+  } @else {
+    <div class="loading-state" style="padding: 3rem 0;">
+      <div class="spinner"></div>
+      <p>{{ uploadStatus() }}</p>
+    </div>
+  }
+
+  <div modal-footer>
+    <button class="btn btn-outlined" (click)="close()" [disabled]="isUploading()">Cancelar</button>
+    <button class="btn btn-primary" (click)="upload()" [disabled]="isUploading() || selectedFiles().length === 0">
+      Subir {{ selectedFiles().length }} fotos
+    </button>
+  </div>
+</app-modal>

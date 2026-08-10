@@ -2,11 +2,14 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environments } from '../../environments/environments';
 import { Observable } from 'rxjs';
-import { PlaceCategory, SavedPlace, CreateSavedPlacePayload } from '../models/map.model';
+import {
+  PlaceCategory,
+  SavedPlace,
+  CreateSavedPlacePayload,
+  LocationPing,
+} from '../models/map.model';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class MapService {
   private http = inject(HttpClient);
   private apiUrl = `${environments.apiUrl}/map`;
@@ -34,6 +37,11 @@ export class MapService {
     return this.http.get<SavedPlace[]>(`${this.apiUrl}/room/${roomId}/saved-places`);
   }
 
+  getSavedPlace(roomId: string, placeId: string): Observable<SavedPlace> {
+    return this.http.get<SavedPlace>(`${this.apiUrl}/room/${roomId}/saved-places/${placeId}`);
+  }
+
+
   createSavedPlace(roomId: string, payload: CreateSavedPlacePayload): Observable<SavedPlace> {
     return this.http.post<SavedPlace>(`${this.apiUrl}/room/${roomId}/saved-places`, payload);
   }
@@ -42,13 +50,21 @@ export class MapService {
     return this.http.delete<void>(`${this.apiUrl}/room/${roomId}/saved-places/${placeId}`);
   }
 
-  // --- Utilidades WKT ---
-  // Convierte lng/lat a formato WKT: "POINT (lng lat)"
+  recordLocationPing(roomId: string, locationWkt: string, batteryLevel?: number) {
+    return this.http.post(`${this.apiUrl}/room/${roomId}/location-pings`, {
+      locationWkt,
+      batteryLevel,
+    });
+  }
+
+  getLatestLocationPings(roomId: string): Observable<LocationPing[]> {
+    return this.http.get<LocationPing[]>(`${this.apiUrl}/room/${roomId}/location-pings/latest`);
+  }
+
   toWkt(lng: number, lat: number): string {
     return `POINT (${lng} ${lat})`;
   }
 
-  // Extrae lng/lat de un WKT
   parseWkt(wkt: string): { lng: number; lat: number } | null {
     const match = wkt.match(/POINT\s*\(([-\d.]+)\s+([-\d.]+)\)/i);
     if (match) {

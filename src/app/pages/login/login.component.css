@@ -8,6 +8,7 @@
 
 /* ---------- Lado Visual: tablero de recuerdos ---------- */
 .login-aside {
+  order: 1;
   position: relative;
   flex: 1;
   background-color: var(--color-secondary);
@@ -17,6 +18,21 @@
   justify-content: center;
   padding: 4rem 3rem;
   overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+
+/* En modo registro: cambia de color */
+.aside-register {
+  background-color: var(--color-primary);
+}
+
+/* En modo registro: el tablero de fotos pasa al lado derecho */
+.mode-register .login-aside {
+  order: 2;
+}
+
+.mode-register .login-main {
+  order: 1;
 }
 
 .aside-brand {
@@ -49,16 +65,41 @@
   z-index: 5;
 }
 
-.board-item:nth-child(2) {
+.memory-board .board-item:nth-child(2) {
   margin-top: 2.5rem;
 }
 
-.board-item:nth-child(3) {
+.memory-board .board-item:nth-child(3) {
   margin-top: -1rem;
+}
+
+/* Modo registro: 4 fotos organizadas en cuadrícula suelta, no en fila */
+.memory-board.layout-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem 1rem;
+  max-width: 420px;
+}
+
+.memory-board.layout-grid .board-item {
+  margin-top: 0;
+}
+
+.memory-board.layout-grid .board-item:nth-child(2) {
+  margin-top: 2rem;
+}
+
+.memory-board.layout-grid .board-item:nth-child(3) {
+  margin-top: -0.5rem;
+}
+
+.memory-board.layout-grid .board-item:nth-child(4) {
+  margin-top: 1.5rem;
 }
 
 /* ---------- Lado Formulario ---------- */
 .login-main {
+  order: 2;
   position: relative;
   flex: 1.2;
   display: flex;

@@ -1,0 +1,65 @@
+@if (isOpen()) {
+  <div class="viewer-backdrop" (click)="closeModal.emit()">
+    <div class="viewer-container" (click)="$event.stopPropagation()">
+
+      <!-- LADO IZQUIERDO: LA FOTO -->
+      <div class="viewer-image-side">
+        @if (media()?.thumbnailUrl || media()?.r2Url) {
+          <img [src]="media()?.thumbnailUrl || media()?.r2Url" alt="Recuerdo ampliado" />
+        } @else {
+          <div class="loading-state">
+            <div class="spinner"></div>
+          </div>
+        }
+      </div>
+
+      <!-- LADO DERECHO: INTERACCIONES -->
+      <div class="viewer-info-side">
+
+        <div class="viewer-header">
+          <p class="viewer-caption">{{ media()?.caption || 'Un nuevo recuerdo' }}</p>
+          <button class="icon-btn-sm" (click)="closeModal.emit()">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+
+        <div class="viewer-actions">
+          <button class="like-btn-big" [class.liked]="isLiked()" (click)="toggleLike()">
+            <span class="material-symbols-outlined">
+              {{ isLiked() ? 'favorite' : 'favorite_border' }}
+            </span>
+            <span>{{ detail()?.reactionCount || 0 }}</span>
+          </button>
+        </div>
+
+        <div class="viewer-comments">
+          @if (comments().length === 0) {
+            <p class="no-comments">Aún no hay comentarios. ¡Sé el primero!</p>
+          } @else {
+            @for (comment of comments(); track comment.id) {
+              <div class="comment-item">
+                <strong>Tú</strong> <!-- Aquí deberías mapear el userId a un nombre real si lo tuvieras -->
+                <span>{{ comment.content }}</span>
+              </div>
+            }
+          }
+        </div>
+
+        <div class="viewer-comment-input">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Escribe un comentario..."
+            [ngModel]="newComment()"
+            (ngModelChange)="newComment.set($event)"
+            (keyup.enter)="addComment()"
+          />
+          <button class="btn btn-primary" (click)="addComment()" [disabled]="!newComment().trim()">
+            <span class="material-symbols-outlined">send</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+}

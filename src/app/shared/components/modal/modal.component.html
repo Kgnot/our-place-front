@@ -1,0 +1,27 @@
+@if (isOpen()) {
+  <div class="modal-backdrop" (click)="close()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          @if (subtitle()) {
+            <p class="modal-subtitle">{{ subtitle() }}</p>
+          }
+          <h3>{{ title() }}</h3>
+        </div>
+        <button class="icon-btn-sm" (click)="close()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Aquí se inyecta el contenido específico (ej. el formulario) -->
+        <ng-content></ng-content>
+      </div>
+
+      <!-- Footer opcional -->
+      <div class="modal-footer">
+        <ng-content select="[modal-footer]"></ng-content>
+      </div>
+    </div>
+  </div>
+}

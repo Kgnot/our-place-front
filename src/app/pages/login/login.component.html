@@ -1,15 +1,19 @@
-<div class="login-wrapper">
+<div class="login-wrapper" [class.mode-register]="!isLoginMode()">
   <div class="noise-overlay"></div>
 
-  <!-- Lado Izquierdo: tablero de recuerdos -->
-  <aside class="login-aside">
+  <!-- Lado de fotos: cambia de lado, color y organización según el modo -->
+  <aside class="login-aside" [class.aside-register]="!isLoginMode()">
     <div class="aside-brand">
       <h1 class="brand-name">Our Place</h1>
-      <p class="brand-tagline">Tu espacio íntimo para recuerdos, momentos y aventuras compartidas.</p>
+      <p class="brand-tagline">
+        {{ isLoginMode()
+        ? 'Tu espacio íntimo para recuerdos, momentos y aventuras compartidas.'
+        : 'Empieza hoy tu propia colección de recuerdos.' }}
+      </p>
     </div>
 
-    <div class="memory-board">
-      @for (photo of memoryPhotos; track photo.url) {
+    <div class="memory-board" [class.layout-grid]="!isLoginMode()">
+      @for (photo of memoryPhotos(); track photo.url) {
         <app-photo-card
           class="board-item"
           [imageUrl]="photo.url"

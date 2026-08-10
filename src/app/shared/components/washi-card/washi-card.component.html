@@ -1,0 +1,12 @@
+<div class="washi-card" [style.transform]="'rotate(' + rotate() + 'deg)'">
+  <div
+    class="washi-tape"
+    [class.tape-sage]="tape() === 'sage'"
+    [class.tape-mustard]="tape() === 'mustard'"
+    [class.tape-pink]="tape() === 'pink'"
+    [class.tape-green]="tape() === 'green'"
+  ></div>
+  <div class="card-inner">
+    <ng-content></ng-content>
+  </div>
+</div>

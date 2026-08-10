@@ -1,0 +1,22 @@
+@if (pets().length === 0) {
+  <div class="pet-empty-card" (click)="addPet.emit()">
+    <div class="add-icon"><span class="material-symbols-outlined">pets</span></div>
+    <h3>Agregar mascota</h3>
+    <p>Súmala a la familia.</p>
+  </div>
+} @else {
+  @for (pet of pets(); track pet.id) {
+    <button class="pet-avatar" (click)="selectPet.emit(pet.id)" [attr.aria-label]="pet.name">
+      @if (pet.avatarUrl) {
+        <img [src]="pet.avatarUrl" [alt]="pet.name" />
+      } @else {
+        <span class="material-symbols-outlined">pets</span>
+      }
+      <span class="pet-name">{{ pet.name }}</span>
+    </button>
+  }
+  <button class="pet-avatar pet-avatar-add" (click)="addPet.emit()" aria-label="Agregar mascota">
+    <span class="material-symbols-outlined">add</span>
+    <span class="pet-name">Agregar</span>
+  </button>
+}

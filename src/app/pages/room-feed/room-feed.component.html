@@ -1,103 +1,92 @@
 <div class="noise-overlay"></div>
-
 <app-room-header />
 
-
-<main class="feed-main">
-  <div class="masonry-grid">
-    <!-- Tarjeta de Añadir Nota -->
-    <div class="masonry-item add-card-masonry">
-      <div class="add-card-inner" (click)="openAddModal()">
-        <div class="add-icon"><span class="material-symbols-outlined">edit_note</span></div>
-        <h3>Escribir un recuerdo</h3>
-        <p>Deja una nota de amor.</p>
+<div class="feed-layout">
+  <main class="feed-main">
+    <div class="masonry-grid">
+      <div class="masonry-item add-card-masonry">
+        <div class="add-card-inner" (click)="isAddNoteOpen.set(true)">
+          <div class="add-icon"><span class="material-symbols-outlined">edit_note</span></div>
+          <h3>Escribir un recuerdo</h3>
+          <p>Deja una nota de amor.</p>
+        </div>
       </div>
+
+      @for (media of mediaItems(); track media.mediaId) {
+        <article class="masonry-item">
+          <app-feed-media-card [media]="media" [roomId]="roomId()" (openViewer)="selectedMedia.set($event)" />
+        </article>
+      }
+
+      @for (note of notes(); track note.id) {
+        <article class="masonry-item">
+          <app-feed-note-card [note]="note" />
+        </article>
+      }
     </div>
+  </main>
 
-    <!-- FOTOS DE LA GALERÍA -->
-    @for (media of mediaItems(); track media.mediaId) {
-      <article class="masonry-item group">
-        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-6 washi-tape green z-10"></div>
-        <div class="polaroid-card rotate-right">
-          @if (media.thumbnailUrl) {
-            <img [src]="media.thumbnailUrl" class="feed-photo" alt="Recuerdo" />
-          } @else {
-            <!-- Placeholder mientras genera thumbnail -->
-            <div class="photo-placeholder loading-shimmer">
-              <span class="material-symbols-outlined photo-icon">hourglass_top</span>
-            </div>
-          }
-          <p class="handwritten-comment">{{ media.caption || 'Un nuevo recuerdo' }}</p>
-          <div class="card-footer">
-            <button class="like-btn"><span class="material-symbols-outlined">favorite</span><span class="like-count">0</span></button>
-            <input type="text" class="comment-input" placeholder="Add comment..." />
-          </div>
-        </div>
-      </article>
-    }
+  <div class="dashed-divider-v"></div>
+  <aside>
+    <app-pets-rail [pets]="pets()" (addPet)="isAddPetOpen.set(true)" (selectPet)="goToPet($event)" />
+  </aside>
+</div>
 
-    <!-- NOTAS DE TEXTO (Love Notes) -->
-    @for (note of notes(); track note.id) {
-      <article class="masonry-item group">
-        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-6 washi-tape pink z-10"></div>
-        <div class="polaroid-card rotate-left">
-          <div class="photo-placeholder" [style.background]="['#e5e2dc', '#f5f1e7', '#f0eee8'][$index % 3]">
-            <span class="material-symbols-outlined photo-icon">image</span>
-          </div>
-          <p class="handwritten-comment">"{{ note.content }}"</p>
-          <div class="card-footer">
-            <button class="like-btn"><span class="material-symbols-outlined">favorite</span><span class="like-count">0</span></button>
-            <input type="text" class="comment-input" placeholder="Add comment..." />
-          </div>
-        </div>
-      </article>
-    }
-  </div>
-</main>
-
-<!-- BOTÓN FLOTANTE (FAB) -->
-<button class="fab-btn" (click)="openFilePicker()" [disabled]="isUploading()">
+<button class="fab-btn" (click)="isUploadOpen.set(true)">
   <span class="material-symbols-outlined">add_a_photo</span>
   <span class="fab-text">Agregar fotos</span>
 </button>
 
-<input #fileInput type="file" accept="image/*" multiple (change)="onFilesSelected($event)" style="display: none;" />
+<!-- MODALES (Súper limpios, solo Inputs y Outputs) -->
+<app-upload-photos-modal
+  [isOpen]="isUploadOpen()"
+  [roomId]="roomId()"
+  (closeModal)="isUploadOpen.set(false)"
+  (uploadComplete)="onUploadComplete($event)"
+/>
 
-<!-- MODAL DE PREVISUALIZACIÓN Y SUBIDA -->
-@if (isPreviewOpen()) {
-  <div class="modal-backdrop" (click)="closePreview()">
-    <div class="modal-card" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h3>Previsualizar ({{ selectedFiles().length }} fotos)</h3>
-        <button class="icon-btn-sm" (click)="closePreview()" [disabled]="isUploading()">
-          <span class="material-symbols-outlined">close</span>
-        </button>
-      </div>
+<app-add-note-modal
+  [isOpen]="isAddNoteOpen()"
+  [roomId]="roomId()"
+  (closeModal)="isAddNoteOpen.set(false)"
+  (noteCreated)="onNoteCreated($event)"
+/>
 
-      <div class="modal-body">
-        @if (isUploading()) {
-          <div class="uploading-state">
-            <div class="spinner"></div>
-            <p>{{ uploadStatus() }}</p>
-          </div>
-        } @else {
-          <div class="preview-grid">
-            @for (url of previewUrls(); track $index) {
-              <div class="preview-item">
-                <img [src]="url" alt="Preview" />
-              </div>
-            }
-          </div>
-        }
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-outlined" (click)="closePreview()" [disabled]="isUploading()">Cancelar</button>
-        <button class="btn btn-primary" (click)="uploadPhotos()" [disabled]="isUploading()">
-          <span class="material-symbols-outlined" style="font-size: 18px; margin-right: 4px;">cloud_upload</span>
-          Subir Recuerdos
-        </button>
-      </div>
-    </div>
+<!-- Modal de Mascotas (Lo dejamos aquí porque es cortito) -->
+<app-modal [isOpen]="isAddPetOpen()" title="Agregar mascota" (closeModal)="isAddPetOpen.set(false)">
+  <div class="form-group">
+    <label>Nombre</label>
+    <input type="text" class="form-control" [(ngModel)]="petForm.name" placeholder="Nombre de la mascota" />
   </div>
+  <div class="form-group">
+    <label>Especie</label>
+    <select class="form-control" [(ngModel)]="petForm.speciesCode">
+      <option value="" disabled selected>Selecciona una especie</option>
+      @for (sp of species(); track sp.code) {
+        <option [value]="sp.code">{{ sp.name }}</option>
+      }
+    </select>
+  </div>
+  <div class="form-group">
+    <label>Raza (opcional)</label>
+    <input type="text" class="form-control" [(ngModel)]="petForm.breed" placeholder="Raza" />
+  </div>
+  <div class="form-group">
+    <label>Fecha de nacimiento (opcional)</label>
+    <input type="date" class="form-control" [(ngModel)]="petForm.birthDate" />
+  </div>
+  <div modal-footer>
+    <button class="btn btn-outlined" (click)="isAddPetOpen.set(false)" [disabled]="isSavingPet()">Cancelar</button>
+    <button class="btn btn-primary" (click)="savePet()" [disabled]="isSavingPet() || !petForm.name.trim() || !petForm.speciesCode">Guardar</button>
+  </div>
+</app-modal>
+
+<!-- VISOR DE FOTOS -->
+@if (selectedMedia()) {
+  <app-photo-viewer-modal
+    [isOpen]="true"
+    [media]="selectedMedia()"
+    [roomId]="roomId()"
+    (closeModal)="selectedMedia.set(null)"
+  />
 }

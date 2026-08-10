@@ -1,0 +1,53 @@
+:host {
+  display: block;
+}
+
+.washi-card {
+  position: relative;
+  width: 100%;
+  transition: transform 0.3s ease;
+}
+
+.washi-card:hover {
+  transform: rotate(0deg) translateY(-4px) !important;
+  z-index: 20;
+}
+
+.washi-tape {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-3deg);
+  width: 72px;
+  height: 24px;
+  z-index: 15;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  background: color-mix(in srgb, var(--color-primary) 55%, transparent);
+}
+
+.tape-sage {
+  background: color-mix(in srgb, var(--color-secondary) 55%, transparent);
+}
+
+.tape-mustard {
+  background: color-mix(in srgb, #d4a94c 60%, transparent);
+}
+
+/* "green" se usa hoy en el feed para notas de tipo familia — mismo tono que sage */
+.tape-green {
+  background: color-mix(in srgb, var(--color-secondary) 55%, transparent);
+}
+
+/* Aproximación de rosa — si ya tienes .washi-tape.pink definido globalmente
+   con otro hex, reemplaza este valor por ese mismo para que coincida */
+.tape-pink {
+  background: rgba(214, 156, 166, 0.75);
+}
+
+.card-inner {
+  background: var(--color-white);
+  border-radius: var(--washi-card-radius, 10px);
+  padding: var(--washi-card-padding, 10px 10px 28px);
+  box-shadow: var(--washi-card-shadow, 0 12px 30px rgba(61, 58, 53, 0.18));
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
