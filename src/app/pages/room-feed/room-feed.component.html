@@ -4,8 +4,10 @@
 <div class="feed-layout">
   <main class="feed-main">
     <div class="masonry-grid">
+      <!-- MEJORA 1: Usamos glass-card en la tarjeta de añadir nota para que parezca un cristal esmerilado -->
       <div class="masonry-item add-card-masonry">
-        <div class="add-card-inner" (click)="isAddNoteOpen.set(true)">
+        <div class="add-card-inner glass-card" (click)="isAddNoteOpen.set(true)">
+          <span class="op-badge primary" style="margin-bottom: 1rem;">Rápido</span>
           <div class="add-icon"><span class="material-symbols-outlined">edit_note</span></div>
           <h3>Escribir un recuerdo</h3>
           <p>Deja una nota de amor.</p>
@@ -27,7 +29,8 @@
   </main>
 
   <div class="dashed-divider-v"></div>
-  <aside>
+  <!-- MEJORA 2: hide-scrollbar por si el riel de mascotas se hace largo y empieza a hacer scroll -->
+  <aside class="hide-scrollbar">
     <app-pets-rail [pets]="pets()" (addPet)="isAddPetOpen.set(true)" (selectPet)="goToPet($event)" />
   </aside>
 </div>
@@ -52,12 +55,16 @@
   (noteCreated)="onNoteCreated($event)"
 />
 
-<!-- Modal de Mascotas (Lo dejamos aquí porque es cortito) -->
+<!-- MEJORA 3: Usamos op-divider dentro del modal de mascotas para separar campos -->
 <app-modal [isOpen]="isAddPetOpen()" title="Agregar mascota" (closeModal)="isAddPetOpen.set(false)">
+
   <div class="form-group">
     <label>Nombre</label>
     <input type="text" class="form-control" [(ngModel)]="petForm.name" placeholder="Nombre de la mascota" />
   </div>
+
+  <div class="op-divider">Datos básicos</div>
+
   <div class="form-group">
     <label>Especie</label>
     <select class="form-control" [(ngModel)]="petForm.speciesCode">

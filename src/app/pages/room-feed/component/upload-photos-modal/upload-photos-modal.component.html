@@ -1,18 +1,27 @@
 <app-modal [isOpen]="isOpen()" title="Subir recuerdos" (closeModal)="close()">
 
   @if (!isUploading()) {
-    <div class="form-group">
-      <label>Selecciona las fotos</label>
-      <input type="file" accept="image/*" multiple (change)="onFilesSelected($event)" class="form-control" />
+    <!-- Zona de selección fija arriba -->
+    <div class="upload-zone" (click)="fileInput.click()">
+      <span class="material-symbols-outlined upload-icon">cloud_upload</span>
+      <p class="upload-text">Haz clic para seleccionar fotos</p>
+      <p class="upload-subtext">(Puedes seleccionar varias a la vez)</p>
+      <input #fileInput type="file" accept="image/*" multiple (change)="onFilesSelected($event)" style="display: none;" />
     </div>
 
+    <!-- Grilla de fotos seleccionadas -->
     @if (previewUrls().length > 0) {
-      <div class="preview-grid">
-        @for (url of previewUrls(); track $index) {
-          <div class="preview-item">
-            <img [src]="url" alt="Preview" />
-          </div>
-        }
+      <div class="preview-container">
+        <div class="preview-grid">
+          @for (url of previewUrls(); track $index) {
+            <div class="preview-item">
+              <img [src]="url" alt="Preview" />
+              <button class="remove-photo-btn" (click)="removePhoto($index)" title="Quitar">
+                <span class="material-symbols-outlined">close</span>
+              </button>
+            </div>
+          }
+        </div>
       </div>
     }
   } @else {
