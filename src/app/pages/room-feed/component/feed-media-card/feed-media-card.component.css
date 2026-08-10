@@ -1,10 +1,57 @@
-/* Eliminamos el .comment-input y mejoramos los botones */
+/* feed-media-card.component.css */
+:host {
+  display: block;
+}
+
+.photo-wrapper {
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+/* EL ARREGLO DE LAS FOTOS */
+.feed-photo {
+  width: 100%;
+  height: auto; /* ¡Esto hace la magia! */
+  display: block;
+  background: var(--color-neutral);
+}
+
+.photo-placeholder {
+  width: 100%;
+  aspect-ratio: 4/5; /* Solo el loader de carga tiene ratio fijo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-neutral);
+}
+.photo-icon { font-size: 3rem; color: rgba(0,0,0,0.1); }
+
+.loading-shimmer {
+  background: linear-gradient(90deg, #f0eee8 25%, #e5e2dc 50%, #f0eee8 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Footer de la tarjeta */
+.handwritten-comment {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.125rem;
+  line-height: 1.4;
+  color: var(--color-text);
+  text-align: center;
+  margin: 1rem 0.5rem;
+}
+
 .card-footer {
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  padding: 0 0.5rem;
-  margin-top: 0.5rem;
+  padding: 0 0.5rem 0.5rem;
 }
 
 .action-btn {
@@ -16,9 +63,8 @@
   cursor: pointer;
   color: var(--color-text-light);
   transition: color 0.2s, transform 0.15s;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.85rem;
   font-weight: 600;
+  font-size: 0.85rem;
   padding: 4px 0;
 }
 .action-btn:hover { color: var(--color-primary); }

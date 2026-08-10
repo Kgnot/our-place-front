@@ -1,10 +1,23 @@
 <div class="noise-overlay"></div>
 
 <main class="pet-profile-main">
-  <button class="back-btn" (click)="goBack()">
-    <span class="material-symbols-outlined">arrow_back</span>
-    Volver al feed
-  </button>
+  <div class="top-actions">
+    <button class="back-btn" (click)="goBack()">
+      <span class="material-symbols-outlined">arrow_back</span>
+      Volver al feed
+    </button>
+
+    @if (pet()) {
+      <div class="pet-actions">
+        <button class="icon-btn-sm" (click)="openEditModal()" title="Editar">
+          <span class="material-symbols-outlined">edit</span>
+        </button>
+        <button class="icon-btn-sm danger" (click)="deletePet()" title="Eliminar">
+          <span class="material-symbols-outlined">delete</span>
+        </button>
+      </div>
+    }
+  </div>
 
   @if (isLoading()) {
     <div class="pet-loading">
@@ -34,6 +47,7 @@
     </section>
 
     <section class="pet-details-grid">
+      <!-- Tarjetas de detalle (cumpleaños, edad, etc) igual que las tenías -->
       <div class="pet-detail-card">
         <span class="material-symbols-outlined">cake</span>
         <div>
@@ -62,3 +76,31 @@
     </section>
   }
 </main>
+
+<!-- MODAL EDITAR MASCOTA -->
+<app-modal [isOpen]="isEditOpen()" title="Editar mascota" (closeModal)="isEditOpen.set(false)">
+  <div class="form-group">
+    <label>Nombre</label>
+    <input type="text" class="form-control" [(ngModel)]="editForm.name" />
+  </div>
+  <div class="form-group">
+    <label>Especie</label>
+    <select class="form-control" [(ngModel)]="editForm.speciesCode">
+      @for (sp of petService.species(); track sp.code) {
+        <option [value]="sp.code">{{ sp.name }}</option>
+      }
+    </select>
+  </div>
+  <div class="form-group">
+    <label>Raza</label>
+    <input type="text" class="form-control" [(ngModel)]="editForm.breed" />
+  </div>
+  <div class="form-group">
+    <label>Fecha de nacimiento</label>
+    <input type="date" class="form-control" [(ngModel)]="editForm.birthDate" />
+  </div>
+  <div modal-footer>
+    <button class="btn btn-outlined" (click)="isEditOpen.set(false)">Cancelar</button>
+    <button class="btn btn-primary" (click)="saveChanges()" [disabled]="isSaving()">Guardar cambios</button>
+  </div>
+</app-modal>

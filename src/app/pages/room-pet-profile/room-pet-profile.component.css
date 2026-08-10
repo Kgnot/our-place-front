@@ -154,3 +154,62 @@
   color: var(--color-text);
   font-family: 'Literata', serif;
 }
+
+.top-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.pet-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.icon-btn-sm {
+  border: none;
+  background: var(--color-white);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  color: var(--color-text-light);
+  transition: all 0.2s;
+}
+.icon-btn-sm:hover { background: var(--color-neutral); color: var(--color-primary); }
+.icon-btn-sm.danger:hover { color: var(--color-danger); background: var(--color-danger-bg); }
+
+.top-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.pet-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.icon-btn-sm {
+  border: none;
+  background: var(--color-white);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  color: var(--color-text-light);
+  transition: all 0.2s;
+}
+
+.icon-btn-sm:hover {
+  background: var(--color-neutral);
+  color: var(--color-primary);
+}
+
+/* Usamos variables en lugar de colores quemados */
+.icon-btn-sm.danger:hover {
+  color: var(--color-danger);
+  background: var(--color-danger-bg);
+}

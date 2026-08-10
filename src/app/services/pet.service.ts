@@ -6,7 +6,6 @@ import { Pet, CreatePetPayload, UpdatePetPayload, LkpSpecies } from '../models/p
 @Injectable({ providedIn: 'root' })
 export class PetService {
   private http = inject(HttpClient);
-
   private apiUrl = `${environments.apiUrl}/pet`;
 
   readonly pets = signal<Pet[]>([]);
@@ -26,20 +25,19 @@ export class PetService {
     });
   }
 
-  // Asume GET /pet/:petId siguiendo el mismo patrón que update/delete.
-  getPetById(petId: string) {
-    return this.http.get<Pet>(`${this.apiUrl}/${petId}`);
+  getPetById(roomId: string, petId: string) {
+    return this.http.get<Pet>(`${this.apiUrl}/rooms/${roomId}/pets/${petId}`);
   }
 
   createPet(roomId: string, payload: CreatePetPayload) {
     return this.http.post<Pet>(`${this.apiUrl}/rooms/${roomId}`, payload);
   }
 
-  updatePet(petId: string, payload: UpdatePetPayload) {
-    return this.http.put<Pet>(`${this.apiUrl}/${petId}`, payload);
+  updatePet(roomId: string, petId: string, payload: UpdatePetPayload) {
+    return this.http.put<Pet>(`${this.apiUrl}/rooms/${roomId}/pets/${petId}`, payload);
   }
 
-  deletePet(petId: string) {
-    return this.http.delete(`${this.apiUrl}/${petId}`);
+  deletePet(roomId: string, petId: string) {
+    return this.http.delete(`${this.apiUrl}/rooms/${roomId}/pets/${petId}`);
   }
 }

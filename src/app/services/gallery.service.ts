@@ -9,8 +9,6 @@ export class GalleryService {
   private http = inject(HttpClient);
   private apiUrl = `${environments.apiUrl}/rooms`;
 
-  // page/size/sort son opcionales porque los componentes los llaman de formas
-  // distintas: a veces sin paginar, a veces con (page, size) sueltos.
   private toParams(
     extra: Record<string, string> = {},
     page?: number,
@@ -18,13 +16,26 @@ export class GalleryService {
     sort?: string[],
   ): string {
     const params = new URLSearchParams(extra);
-    if (page !== undefined) params.set('page', String(page));
-    if (size !== undefined) params.set('size', String(size));
-    if (sort) sort.forEach((s) => params.append('sort', s));
+
+    if (page !== undefined) {
+      params.set('page', String(page));
+    }
+
+    if (size !== undefined) {
+      params.set('size', String(size));
+    }
+
+    if (sort) {
+      sort.forEach((s) => params.append('sort', s));
+    }
+
     return params.toString();
   }
 
-  // Subida de media
+  // ============================================================
+  // UPLOAD
+  // ============================================================
+
   presignUpload(roomId: string, entries: any[]) {
     return this.http.post<{ items: UploadItem[] }>(`${this.apiUrl}/${roomId}/media/presign`, {
       entries,
@@ -36,7 +47,9 @@ export class GalleryService {
       fetch(url, {
         method: 'PUT',
         body: file,
-        headers: { 'Content-Type': file.type },
+        headers: {
+          'Content-Type': file.type,
+        },
       }).then((res) => res.ok),
     );
   }
@@ -45,13 +58,17 @@ export class GalleryService {
     return this.http.post<any[]>(`${this.apiUrl}/${roomId}/media/confirm`, { items });
   }
 
-  // Obtener media
-  getMediaList(roomId: string, page?: number, size?: number, sort?: string[]) {
+  // ============================================================
+  // MEDIA
+  // ============================================================
+
+  getMediaList(roomId: string, page = 0, size = 20, sort?: string[]): Observable<PageMedia> {
     const params = this.toParams({}, page, size, sort);
+
     return this.http.get<PageMedia>(`${this.apiUrl}/${roomId}/media?${params}`);
   }
 
-  getMediaDetail(roomId: string, mediaId: string) {
+  getMediaDetail(roomId: string, mediaId: string): Observable<MediaDetail> {
     return this.http.get<MediaDetail>(`${this.apiUrl}/${roomId}/media/${mediaId}`);
   }
 
@@ -63,32 +80,40 @@ export class GalleryService {
     return this.http.patch(`${this.apiUrl}/${roomId}/media/${mediaId}/caption`, { caption });
   }
 
-  // Consultas especializadas
+  // ============================================================
+  // CONSULTAS ESPECIALIZADAS
+  // ============================================================
+
   getMediaForMonth(
     roomId: string,
     year: number,
     month: number,
-    page?: number,
-    size?: number,
+    page = 0,
+    size = 20,
     sort?: string[],
   ) {
-    const params = this.toParams({ year: String(year), month: String(month) }, page, size, sort);
+    const params = this.toParams(
+      {
+        year: String(year),
+        month: String(month),
+      },
+      page,
+      size,
+      sort,
+    );
+
     return this.http.get<PageMedia>(`${this.apiUrl}/${roomId}/media/this-month?${params}`);
   }
 
-  getMediaForWeek(
-    roomId: string,
-    referenceDate: string,
-    page?: number,
-    size?: number,
-    sort?: string[],
-  ) {
+  getMediaForWeek(roomId: string, referenceDate: string, page = 0, size = 20, sort?: string[]) {
     const params = this.toParams({ referenceDate }, page, size, sort);
+
     return this.http.get<PageMedia>(`${this.apiUrl}/${roomId}/media/this-week?${params}`);
   }
 
-  getLatestMedia(roomId: string, page?: number, size?: number, sort?: string[]) {
+  getLatestMedia(roomId: string, page = 0, size = 20, sort?: string[]) {
     const params = this.toParams({}, page, size, sort);
+
     return this.http.get<PageMedia>(`${this.apiUrl}/${roomId}/media/latest?${params}`);
   }
 
@@ -96,16 +121,20 @@ export class GalleryService {
     roomId: string,
     from: string,
     to: string,
-    page?: number,
-    size?: number,
+    page = 0,
+    size = 20,
     sort?: string[],
   ) {
     const params = this.toParams({ from, to }, page, size, sort);
+
     return this.http.get<PageMedia>(`${this.apiUrl}/${roomId}/media/by-date?${params}`);
   }
 
-  // Comentarios
-  listComments(roomId: string, mediaId: string) {
+  // ============================================================
+  // COMMENTS
+  // ============================================================
+
+  listComments(roomId: string, mediaId: string): Observable<MediaComment[]> {
     return this.http.get<MediaComment[]>(`${this.apiUrl}/${roomId}/media/${mediaId}/comments`);
   }
 
@@ -117,7 +146,10 @@ export class GalleryService {
     return this.http.delete(`${this.apiUrl}/${roomId}/media/${mediaId}/comments/${commentId}`);
   }
 
-  // Reacciones
+  // ============================================================
+  // REACTIONS
+  // ============================================================
+
   react(roomId: string, mediaId: string, reactionType: string) {
     return this.http.put(`${this.apiUrl}/${roomId}/media/${mediaId}/reactions/me`, {
       reactionType,

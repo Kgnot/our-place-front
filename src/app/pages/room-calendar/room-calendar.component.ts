@@ -14,7 +14,12 @@ import { MONTHS, WEEK_DAYS } from '../../utils/calendar.constants';
 @Component({
   selector: 'app-room-calendar',
   standalone: true,
-  imports: [CommonModule, RoomHeaderComponent, ModalComponent, FormsModule],
+  imports: [
+    CommonModule,
+    RoomHeaderComponent,
+    ModalComponent,
+    FormsModule,
+  ],
   templateUrl: './room-calendar.component.html',
   styleUrl: './room-calendar.component.css',
 })
@@ -25,6 +30,7 @@ export class RoomCalendarComponent {
 
   currentMonth = this.calendarService.currentMonth;
   isLoading = this.calendarService.isLoading;
+  isUploadOpen = signal(false);
   selectedDayDetail = this.calendarService.selectedDayDetail;
 
   monthPhotos = signal<any[]>([]);
@@ -162,5 +168,10 @@ export class RoomCalendarComponent {
     this.viewDate.set(date);
 
     this.fetchMonthData();
+  }
+
+  onPhotosUploaded(newMedia: any[]) {
+    console.log('Fotos subidas:', newMedia);
+
   }
 }

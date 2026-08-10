@@ -1,4 +1,4 @@
-<app-room-header />
+<app-room-header/>
 
 <main class="calendar-main">
   <!-- CALENDARIO -->
@@ -7,19 +7,25 @@
 
     <div class="calendar-header">
       <div class="month-nav">
-        <button class="nav-btn" (click)="previousMonth()"><span class="material-symbols-outlined">chevron_left</span></button>
+        <button class="nav-btn" (click)="previousMonth()"><span class="material-symbols-outlined">chevron_left</span>
+        </button>
         <h2>{{ months[viewDate().getMonth()] }} {{ viewDate().getFullYear() }}</h2>
-        <button class="nav-btn" (click)="nextMonth()"><span class="material-symbols-outlined">chevron_right</span></button>
+        <button class="nav-btn" (click)="nextMonth()"><span class="material-symbols-outlined">chevron_right</span>
+        </button>
       </div>
       <button class="today-btn">Today</button>
     </div>
 
     <div class="weekdays-grid">
-      @for (day of weekDays; track day) { <div class="weekday">{{ day }}</div> }
+      @for (day of weekDays; track day) {
+        <div class="weekday">{{ day }}</div>
+      }
     </div>
 
     <div class="calendar-grid">
-      @for (blank of blankDays; track $index) { <div class="calendar-cell empty"></div> }
+      @for (blank of blankDays; track $index) {
+        <div class="calendar-cell empty"></div>
+      }
       @for (day of daysInMonth; track day) {
         @let dayInfo = getDayInfo(day);
         <div
@@ -47,7 +53,7 @@
           @if ((dayInfo?.previewPhotos?.length ?? 0) > 0) {
             <div class="day-photos-collection" [class.multiple]="(dayInfo?.previewPhotos?.length ?? 0) > 1">
               @for (photo of dayInfo?.previewPhotos ?? []; track photo.id) {
-                <img [src]="photo.thumbnailUrl" class="day-photo-circle" alt="Memory" />
+                <img [src]="photo.thumbnailUrl" class="day-photo-circle" alt="Memory"/>
               }
             </div>
           }
@@ -87,7 +93,7 @@
       <p class="entry-content">{{ selectedDayDetail()?.content }}</p>
       <div class="photo-grid">
         @for (media of selectedDayDetail()?.mediaIds; track media.id) {
-          <img [src]="media.thumbnailUrl" class="entry-photo" />
+          <img [src]="media.thumbnailUrl" class="entry-photo"/>
         }
       </div>
     </div>
@@ -95,14 +101,19 @@
     <p class="text-muted">Aún no hay recuerdos en este día. ¡Escribe uno!</p>
   }
 
-  <hr class="divider" />
+  <hr class="divider"/>
 
   <div class="form-group">
     <label>Añadir comentario o nota</label>
-    <textarea class="form-control" rows="3" [ngModel]="newNoteContent()" (ngModelChange)="newNoteContent.set($event)" placeholder="¿Qué pasó este día?"></textarea>
+    <textarea class="form-control" rows="3" [ngModel]="newNoteContent()" (ngModelChange)="newNoteContent.set($event)"
+              placeholder="¿Qué pasó este día?"></textarea>
   </div>
 
-  <button class="upload-btn">
+  <button
+    type="button"
+    class="upload-btn"
+    (click)="isUploadOpen.set(true)"
+  >
     <span class="material-symbols-outlined">add_a_photo</span>
     Subir foto
   </button>
@@ -114,3 +125,4 @@
     </button>
   </div>
 </app-modal>
+
