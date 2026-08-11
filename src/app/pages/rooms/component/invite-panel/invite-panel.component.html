@@ -1,0 +1,41 @@
+<div class="invite-form">
+  <div class="form-group">
+    <label>Email de la persona</label>
+    <input
+      type="email"
+      [(ngModel)]="email"
+      placeholder="ejemplo@correo.com"
+      class="form-input"
+    />
+  </div>
+
+  <div class="form-group">
+    <label>Rol en el espacio</label>
+    <select [(ngModel)]="selectedRole" class="form-input">
+      <option value="" disabled>Selecciona un rol</option>
+      @for (rt of relationshipTypes(); track rt.code) {
+        <option [value]="rt.code">{{ rt.name }}</option>
+      }
+    </select>
+  </div>
+
+  @if (errorMsg()) {
+    <div class="alert alert-error">{{ errorMsg() }}</div>
+  }
+
+  @if (successMsg()) {
+    <div class="alert alert-success">{{ successMsg() }}</div>
+  }
+
+  <button
+    class="btn-primary"
+    (click)="sendInvitation()"
+    [disabled]="isSending()"
+  >
+    @if (isSending()) {
+      Enviando...
+    } @else {
+      Enviar invitación
+    }
+  </button>
+</div>

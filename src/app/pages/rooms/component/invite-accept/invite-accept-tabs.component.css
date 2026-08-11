@@ -1,0 +1,99 @@
+.tabs-wrapper {
+  display: flex;
+  gap: 0;
+  position: relative;
+}
+
+.paper-tab {
+  position: relative;
+  padding: 14px 18px;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-light);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.paper-tab:first-child {
+  border-radius: 10px 0 0 10px;
+  border-right: none;
+  z-index: 2;
+}
+
+.paper-tab:last-child {
+  border-radius: 0 10px 10px 0;
+  margin-left: -8px;
+  z-index: 1;
+  padding-left: 22px;
+}
+
+.paper-tab:hover {
+  background: var(--color-neutral);
+  color: var(--color-text);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  z-index: 3;
+}
+
+.paper-tab:first-child:hover {
+  transform: translateX(-4px) scale(1.02);
+}
+
+.paper-tab:last-child:hover {
+  transform: translateX(4px) scale(1.02);
+  margin-left: 0;
+  padding-left: 18px;
+}
+
+.paper-tab .tab-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.paper-tab:hover .tab-icon {
+  transform: scale(1.15);
+}
+
+.paper-tab .tab-label {
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.paper-tab:hover .tab-label,
+.paper-tab.active .tab-label {
+  max-width: 120px;
+  opacity: 1;
+}
+
+.paper-tab.active {
+  background: var(--color-text);
+  color: var(--color-white);
+  border-color: var(--color-text);
+  z-index: 4;
+}
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: var(--color-danger, #e74c3c);
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-white);
+}

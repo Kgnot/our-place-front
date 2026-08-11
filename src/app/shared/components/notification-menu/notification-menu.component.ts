@@ -1,7 +1,9 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IconButtonComponent } from '../icon-button/icon-button.component';
 import { DropdownComponent } from '../dropdown/dropdown.component';
+import { NotificationService } from '../../../services/notification.service';
+import { toNotificationView } from '../../../utils/notification-display.util';
 
 @Component({
   selector: 'app-notification-menu',
@@ -11,9 +13,17 @@ import { DropdownComponent } from '../dropdown/dropdown.component';
   styleUrl: './notification-menu.component.css',
 })
 export class NotificationMenuComponent {
-  // Aqui TODO: websocket
-  notifications = signal([
-    { id: 1, text: 'Alex añadió una nueva foto al Feed.', time: 'Hace 2h', icon: 'add_a_photo' },
-    { id: 2, text: 'Sam comentó en tu nota.', time: 'Hace 1d', icon: 'chat_bubble' },
-  ]);
+  private notificationService = inject(NotificationService);
+
+  readonly unreadCount = this.notificationService.unreadCount;
+
+  readonly notifications = computed(() =>
+    this.notificationService.notifications().map((n) => toNotificationView(n)),
+  );
+
+  onNotificationClick(id: number, isRead: boolean): void {
+    if (!isRead) {
+      this.notificationService.markAsReadOptimistic([id]);
+    }
+  }
 }

@@ -1,0 +1,32 @@
+@if (isLoading()) {
+  <div class="loading-state">
+    <p>Cargando invitaciones...</p>
+  </div>
+} @else if (invitations().length === 0) {
+  <div class="empty-state">
+    <span class="material-symbols-outlined empty-icon">inbox</span>
+    <p>No tienes invitaciones pendientes.</p>
+  </div>
+} @else {
+  <div class="invitations-list">
+    @for (inv of invitations(); track inv.token) {
+      <div class="invitation-card">
+        <div class="invitation-info">
+          <h4 class="room-name">{{ inv.roomName }}</h4>
+          <p class="invited-by">Invitado por {{ inv.invitedBy }}</p>
+        </div>
+        <button
+          class="btn-accept"
+          (click)="acceptInvitation(inv.token)"
+          [disabled]="acceptingToken() === inv.token"
+        >
+          @if (acceptingToken() === inv.token) {
+            Aceptando...
+          } @else {
+            Aceptar
+          }
+        </button>
+      </div>
+    }
+  </div>
+}

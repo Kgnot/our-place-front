@@ -1,6 +1,9 @@
 <app-dropdown #dd>
-  <div trigger>
+  <div trigger class="notif-trigger">
     <app-icon-button icon="notifications" />
+    @if (unreadCount() > 0) {
+      <span class="notif-badge">{{ unreadCount() > 9 ? '9+' : unreadCount() }}</span>
+    }
   </div>
 
   <div content>
@@ -14,12 +17,19 @@
         <p class="empty-state">No hay notificaciones nuevas.</p>
       } @else {
         @for (notif of notifications(); track notif.id) {
-          <div class="notification-item" (click)="dd.close()">
+          <div
+            class="notification-item"
+            [class.unread]="!notif.isRead"
+            (click)="onNotificationClick(notif.id, notif.isRead); dd.close()"
+          >
             <span class="material-symbols-outlined notif-icon">{{ notif.icon }}</span>
             <div class="notif-content">
               <p class="notif-text">{{ notif.text }}</p>
               <p class="notif-time">{{ notif.time }}</p>
             </div>
+            @if (!notif.isRead) {
+              <span class="unread-dot"></span>
+            }
           </div>
         }
       }

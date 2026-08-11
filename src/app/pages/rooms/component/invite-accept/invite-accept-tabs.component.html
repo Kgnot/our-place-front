@@ -1,0 +1,22 @@
+<div class="tabs-wrapper">
+  <div
+    class="paper-tab"
+    [class.active]="activeTab() === 'invite'"
+    (click)="onTabClick('invite')"
+  >
+    <span class="tab-icon material-symbols-outlined">mail</span>
+    <span class="tab-label">Invitar</span>
+  </div>
+
+  <div
+    class="paper-tab"
+    [class.active]="activeTab() === 'accept'"
+    (click)="onTabClick('accept')"
+  >
+    <span class="tab-icon material-symbols-outlined">inbox</span>
+    <span class="tab-label">Aceptar</span>
+    @if (pendingCount() > 0) {
+      <span class="badge">{{ pendingCount() }}</span>
+    }
+  </div>
+</div>
