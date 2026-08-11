@@ -8,6 +8,15 @@
     <p>Elige un room para entrar, o empieza una nueva colección de recuerdos.</p>
   </div>
 
+  <!-- TABS DE INVITAR / ACEPTAR -->
+  <div class="tabs-section">
+    <app-invite-accept-tabs
+      [pendingCount]="pendingInvitationsCount()"
+      [activeTab]="panelMode()"
+      (tabClick)="onTabClick($event)"
+    />
+  </div>
+
   @if (isLoading()) {
     <div class="loading-state">
       <p>Cargando tus espacios...</p>
@@ -35,6 +44,23 @@
     </div>
   }
 </main>
+
+<!-- SIDE PANEL: INVITAR / ACEPTAR -->
+<app-side-panel
+  [isOpen]="isPanelOpen()"
+  [title]="panelMode() === 'invite' ? 'Invitar a un espacio' : 'Invitaciones pendientes'"
+  [subtitle]="panelMode() === 'invite' ? 'Envía una invitación por email' : 'Gestiona tus invitaciones'"
+  (closePanel)="closePanel()"
+>
+  @if (panelMode() === 'invite') {
+    <app-invite-panel
+      [rooms]="rooms()"
+      [relationshipTypes]="relationshipTypes()"
+    />
+  } @else if (panelMode() === 'accept') {
+    <app-accept-panel />
+  }
+</app-side-panel>
 
 <app-create-room-modal
   [isOpen]="isModalOpen()"

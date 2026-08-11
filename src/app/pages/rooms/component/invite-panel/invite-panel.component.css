@@ -31,6 +31,17 @@
   border-color: var(--color-text);
 }
 
+select.form-input {
+  color: var(--color-text);
+  background-color: var(--color-white);
+  appearance: auto;
+}
+
+select.form-input option {
+  color: var(--color-text);
+  background-color: var(--color-white);
+}
+
 .btn-primary {
   padding: 12px 20px;
   background: var(--color-text);

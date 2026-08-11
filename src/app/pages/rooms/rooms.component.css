@@ -268,3 +268,10 @@
   font-size: 14px;
   color: var(--color-text);
 }
+
+/*extra*/
+.tabs-section {
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: flex-start;
+}

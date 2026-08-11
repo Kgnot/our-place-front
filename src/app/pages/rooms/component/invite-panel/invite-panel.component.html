@@ -1,5 +1,15 @@
 <div class="invite-form">
   <div class="form-group">
+    <label>Espacio</label>
+    <select [(ngModel)]="selectedRoomId" class="form-input">
+      <option value="" disabled>Selecciona un espacio</option>
+      @for (r of rooms(); track r.roomId) {
+        <option [value]="r.roomId">{{ r.roomName }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="form-group">
     <label>Email de la persona</label>
     <input
       type="email"

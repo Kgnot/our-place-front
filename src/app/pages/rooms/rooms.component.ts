@@ -6,6 +6,13 @@ import { RoomService } from '../../services/room.service';
 import { HeaderComponent } from './component/header/header.component';
 import { RoomCardComponent } from './component/room-card/room-card.component';
 import { CreateRoomModalComponent } from './component/create-room-modal/create-room-modal.component';
+import { SidePanelComponent } from '../../shared/components/side-panel/side-panel.component';
+import {
+  InviteAcceptTabsComponent,
+  TabMode,
+} from './component/invite-accept/invite-accept-tabs.component';
+import { InvitePanelComponent } from './component/invite-panel/invite-panel.component';
+import { AcceptPanelComponent } from './component/accept-panel/accept-panel.component';
 
 @Component({
   selector: 'app-rooms',
@@ -16,6 +23,10 @@ import { CreateRoomModalComponent } from './component/create-room-modal/create-r
     HeaderComponent,
     RoomCardComponent,
     CreateRoomModalComponent,
+    SidePanelComponent,
+    InviteAcceptTabsComponent,
+    InvitePanelComponent,
+    AcceptPanelComponent,
   ],
   templateUrl: './rooms.component.html',
   styleUrl: './rooms.component.css',
@@ -31,11 +42,28 @@ export class RoomsComponent {
   isModalOpen = signal(false);
   isSaving = signal(false);
 
+  // --- Side Panel de Invitaciones ---
+  isPanelOpen = signal(false);
+  panelMode = signal<TabMode | null>(null);
+  pendingInvitationsCount = this.roomService.pendingInvitationsCount;
+
   constructor() {
     afterNextRender(() => {
       this.roomService.loadMyRooms();
       this.roomService.loadRelationshipTypes();
+      this.roomService.loadPendingInvitations();
     });
+  }
+
+  // --- Tabs de Invitar/Aceptar ---
+  onTabClick(mode: TabMode) {
+    this.panelMode.set(mode);
+    this.isPanelOpen.set(true);
+  }
+
+  closePanel() {
+    this.isPanelOpen.set(false);
+    this.panelMode.set(null);
   }
 
   // --- Navegación ---

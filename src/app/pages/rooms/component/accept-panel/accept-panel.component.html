@@ -1,3 +1,7 @@
+@if (errorMsg()) {
+  <div class="alert alert-error">{{ errorMsg() }}</div>
+}
+
 @if (isLoading()) {
   <div class="loading-state">
     <p>Cargando invitaciones...</p>
@@ -13,7 +17,7 @@
       <div class="invitation-card">
         <div class="invitation-info">
           <h4 class="room-name">{{ inv.roomName }}</h4>
-          <p class="invited-by">Invitado por {{ inv.invitedBy }}</p>
+          <p class="invited-by">Rol: {{ inv.roleCode }} · Expira el {{ inv.expiresAt | date: 'd MMM' }}</p>
         </div>
         <button
           class="btn-accept"

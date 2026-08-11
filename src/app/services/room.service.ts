@@ -1,5 +1,6 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { tap } from 'rxjs';
 import { environments } from '../../environments/environments';
 import {
   Room,
@@ -8,6 +9,17 @@ import {
   RoomMember,
   InvitationResponse,
 } from '../models/room.model';
+
+export interface PendingInvitation {
+  invitationId: number;
+  roomId: string;
+  roomName: string;
+  invitedEmail: string;
+  roleCode: string;
+  token: string;
+  expiresAt: string;
+  createdAt: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class RoomService {
@@ -18,6 +30,11 @@ export class RoomService {
   readonly rooms = signal<Room[]>([]);
   readonly isLoading = signal<boolean>(false);
   readonly relationshipTypes = signal<RelationshipType[]>([]);
+
+  // --- Invitaciones pendientes (estado compartido entre rooms.component y accept-panel) ---
+  readonly pendingInvitations = signal<PendingInvitation[]>([]);
+  readonly pendingInvitationsCount = computed(() => this.pendingInvitations().length);
+  readonly isLoadingInvitations = signal<boolean>(false);
 
   loadMyRooms() {
     this.isLoading.set(true);
@@ -35,7 +52,7 @@ export class RoomService {
 
   searchRooms(query: string) {
     this.isLoading.set(true);
-    this.http.get<Room[]>(`${this.apiUrl}/mine/search?q=${query}`).subscribe({
+    this.http.get<Room[]>(`${this.apiUrl}/mine/search?q=${encodeURIComponent(query)}`).subscribe({
       next: (data) => {
         this.rooms.set(data);
         this.isLoading.set(false);
@@ -70,8 +87,27 @@ export class RoomService {
     });
   }
 
+  loadPendingInvitations() {
+    this.isLoadingInvitations.set(true);
+    this.http.get<PendingInvitation[]>(`${this.apiUrl}/invitations/pending`).subscribe({
+      next: (data) => {
+        this.pendingInvitations.set(data);
+        this.isLoadingInvitations.set(false);
+        console.log('Invitaciones: ', data);
+      },
+      error: (err) => {
+        console.error('Error al obtener invitaciones pendientes', err);
+        this.isLoadingInvitations.set(false);
+      },
+    });
+  }
+
   acceptInvitation(token: string) {
-    return this.http.post<Room>(`${this.apiUrl}/invitations/${token}/accept`, {});
+    return this.http.post<Room>(`${this.apiUrl}/invitations/${token}/accept`, {}).pipe(
+      tap(() => {
+        this.pendingInvitations.update((list) => list.filter((i) => i.token !== token));
+      }),
+    );
   }
 
   listMembers(roomId: string) {
